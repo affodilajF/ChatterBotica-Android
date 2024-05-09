@@ -63,7 +63,8 @@ import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.data.model.VoiceToTextParserState
-import com.example.chatterboticaapp.ui.component.Button
+import com.example.chatterboticaapp.ui.component.IconTextButton
+
 import com.example.chatterboticaapp.ui.component.TextResultOfSpeech
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
@@ -122,11 +123,11 @@ fun SpeechListeningScreen(){
                     .fillMaxWidth(),
                     horizontalArrangement = Arrangement.Center,
                 ){
-                    Button(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
+                    IconTextButton(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
                         viewModel.clearSpokenText()
                     }
                     Spacer(modifier = Modifier.width(24.dp))
-                    Button(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
+                    IconTextButton(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
 
                     }
                 }

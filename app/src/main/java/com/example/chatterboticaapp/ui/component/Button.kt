@@ -30,7 +30,7 @@ import com.example.chatterboticaapp.ui.theme.PrimaryGreen
 import com.example.chatterboticaapp.utils.VoiceToTextParser
 
 @Composable
-fun TalkingButton(){
+fun TextButton(){
     Surface(
         color = Green01,
         shape = RoundedCornerShape(8.dp),
@@ -55,7 +55,7 @@ fun TalkingButton(){
 
 
 @Composable
-fun Button(icon: Int,
+fun IconTextButton(icon: Int,
            iconColor: Color,
            txtColor: Color,
            btnColor: Color,

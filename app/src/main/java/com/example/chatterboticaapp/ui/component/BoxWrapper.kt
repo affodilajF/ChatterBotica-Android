@@ -98,7 +98,7 @@ fun BigBox(){
                     },
                     Modifier.weight(1f)
                 )
-                TalkingButton()
+                TextButton()
             }
         }
     }
