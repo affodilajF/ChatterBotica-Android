@@ -45,20 +45,15 @@ import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 
 @Composable
 fun HomeScreen(navController: NavController){
-        val viewModel: HomeViewModel = hiltViewModel()
-
-//        val navController = rememberNavController()
-//        viewModel.setNavController(navController)
-
-
 
         Column(modifier = Modifier
             .fillMaxSize()
             .background(color = Black01)
-            .padding(horizontal = 22.dp, vertical = 22.dp)
+            .padding(horizontal = 18.dp, vertical = 22.dp)
             ,
         ) {
-            Box(modifier = Modifier.weight(0.35f)) {
+            Box(modifier = Modifier.weight(0.45f),
+                contentAlignment = Alignment.Center) {
                 TitleBar()
             }
             Row(
@@ -100,7 +95,7 @@ fun TitleBar(){
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = "What you want ChatterBotica do for you?",
-                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal, color = Color.White),
+                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal, color = Grey01),
             )
         }
         Profile()
