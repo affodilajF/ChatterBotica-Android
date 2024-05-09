@@ -1,4 +1,4 @@
-package com.example.chatterboticaapp.ui
+package com.example.chatterboticaapp.utils
 
 import android.app.Application
 import android.content.Intent
@@ -9,6 +9,7 @@ import android.speech.SpeechRecognizer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
+import com.example.chatterboticaapp.data.model.VoiceToTextParserState
 
 class VoiceToTextParser(private val app:Application) : RecognitionListener{
 
@@ -85,6 +86,8 @@ class VoiceToTextParser(private val app:Application) : RecognitionListener{
                 isSpeaking = false
             )
         }
+
+//        recognizer.stopListening()
     }
 
     override fun onError(error: Int) {
@@ -118,8 +121,3 @@ class VoiceToTextParser(private val app:Application) : RecognitionListener{
     override fun onEvent(eventType: Int, params: Bundle?) = Unit
 }
 
-data class VoiceToTextParserState(
-    var spokenText : String = "",
-    val isSpeaking : Boolean = true,
-    val error: String? = null
-)

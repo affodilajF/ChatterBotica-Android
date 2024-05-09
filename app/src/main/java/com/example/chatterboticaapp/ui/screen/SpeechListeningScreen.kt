@@ -3,11 +3,8 @@ package com.example.chatterboticaapp.ui.screen
 
 
 import android.Manifest
-import android.annotation.SuppressLint
-import android.util.Log
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedContent
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.VectorConverter
@@ -26,15 +23,14 @@ import androidx.compose.foundation.layout.Box
 
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Refresh
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -59,27 +55,30 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.ViewModel
 import com.example.chatterboticaapp.R
-import com.example.chatterboticaapp.ui.VoiceToTextParser
-import com.example.chatterboticaapp.ui.VoiceToTextParserState
+import com.example.chatterboticaapp.utils.VoiceToTextParser
+import com.example.chatterboticaapp.data.model.VoiceToTextParserState
+import com.example.chatterboticaapp.ui.component.Button
+import com.example.chatterboticaapp.ui.component.TextResultOfSpeech
 import com.example.chatterboticaapp.ui.theme.Black01
+import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey01
-import com.example.chatterboticaapp.ui.theme.Grey02
-import com.example.chatterboticaapp.ui.theme.Grey03
-import com.example.chatterboticaapp.ui.theme.Grey04
-import com.example.chatterboticaapp.ui.theme.Grey05
-import com.example.chatterboticaapp.ui.theme.PrimaryGreen
-
+import com.example.chatterboticaapp.ui.theme.GreyPurple01
+import com.example.chatterboticaapp.ui.theme.GreyPurple03
+import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
+import com.example.chatterboticaapp.utils.MicrophoneUtils
+import dagger.hilt.android.AndroidEntryPoint
 
 
 @Preview
 @Composable
 fun SpeechListeningPreview(){
-//    SpeechListening()
 }
 
 @Composable
-fun SpeechListening(voiceToTextParser : VoiceToTextParser){
+fun SpeechListeningScreen(voiceToTextParser : VoiceToTextParser, micUtil : MicrophoneUtils){
 
     var canRecord by remember { mutableStateOf(true) }
 
@@ -96,8 +95,9 @@ fun SpeechListening(voiceToTextParser : VoiceToTextParser){
 
     val state by voiceToTextParser.state.collectAsState()
 
-
-    Surface(modifier = Modifier.fillMaxSize(),
+    Surface(modifier = Modifier
+        .fillMaxSize()
+        .padding(16.dp),
         color = Black01,
         ) {
         Column(modifier = Modifier.fillMaxSize(),
@@ -107,8 +107,8 @@ fun SpeechListening(voiceToTextParser : VoiceToTextParser){
                 Title(state)
             }
             Box(modifier = Modifier
-                            .weight(2f)
-                            .padding(horizontal = 40.dp)) {
+                .weight(2f)
+                .padding(horizontal = 40.dp)) {
                 TextResultOfSpeech(state)
             }
             Box(modifier = Modifier.weight(2f)) {
@@ -117,16 +117,41 @@ fun SpeechListening(voiceToTextParser : VoiceToTextParser){
             Box(modifier = Modifier.weight(1.2f)) {
                 Row(modifier = Modifier
                     .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.SpaceEvenly,
+                    horizontalArrangement = Arrangement.Center,
                 ){
-                    ResetButton(voiceToTextParser)
-                    SendButton(state, voiceToTextParser)
+                    Button(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
+                        voiceToTextParser.clearSpokenText()
+                    }
+                    Spacer(modifier = Modifier.width(24.dp))
+                    Button(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
+
+                    }
                 }
             }
         }
     }
 }
 
+//@Composable
+//fun SpeechListeningScreen() {
+//    val viewModel: ViewModel = hiltViewModel()
+//    val state by viewModel.state.collectAsState()
+//
+//    Surface(
+//        modifier = Modifier.fillMaxSize(),
+//        color = Color.Black
+//    ) {
+//        Column(
+//            modifier = Modifier.padding(16.dp),
+//            verticalArrangement = Arrangement.spacedBy(16.dp)
+//        ) {
+//            Title(state)
+//            TextResultOfSpeech(state)
+//            SpeechListeningIcon(state, viewModel)
+////            ActionButtons(state, viewModel)
+//        }
+//    }
+//}
 
 
 @Composable
@@ -136,7 +161,7 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, voiceToTextParser: VoiceT
     val iconResId = if (state.isSpeaking) R.drawable.baseline_mic_on_24 else R.drawable.baseline_mic_off_24
 
     // Tentukan warna default dan animasi alpha berdasarkan state.isSpeaking
-    val boxColor = if (state.isSpeaking) Grey03 else Black01
+    val boxColor = if (state.isSpeaking) GreyPurple03 else Black01
     val animatedAlpha by infiniteTransitionSpeech.animateFloat(
         initialValue = if (state.isSpeaking) 0.2f else 1f,
         targetValue = 1f,
@@ -152,7 +177,7 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, voiceToTextParser: VoiceT
     ) {
         Box(
             modifier = Modifier
-                .size(170.dp)
+                .size(150.dp)
                 .background(
                     color = boxColor.copy(alpha = animatedAlpha), // Gunakan alpha yang diatur oleh animasi
                     shape = RoundedCornerShape(percent = 50)
@@ -168,10 +193,10 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, voiceToTextParser: VoiceT
                             } else {
                                 voiceToTextParser.startListening(existedText = state.spokenText)
                             }
-                        } 
+                        }
                     )
-                    .size(120.dp)
-                    .background(color = Grey05, shape = RoundedCornerShape(percent = 50)),
+                    .size(110.dp)
+                    .background(color = GreyPurple01, shape = RoundedCornerShape(percent = 50)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -179,38 +204,6 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, voiceToTextParser: VoiceT
                     contentDescription = if (state.isSpeaking) "Keyboard Voice Icon" else "Search Icon",
                     tint = Color.White,
                     modifier = Modifier.size(40.dp)
-                )
-            }
-        }
-    }
-}
-
-
-
-@Composable
-fun TextResultOfSpeech(state: VoiceToTextParserState) {
-
-    Column(
-        modifier = Modifier
-            .fillMaxSize(),
-        verticalArrangement = Arrangement.Center,
-        horizontalAlignment = Alignment.CenterHorizontally
-    ) {
-        AnimatedContent(
-            targetState = state.isSpeaking, // Gunakan variabel isSpeaking di sini
-            label = "SpeechAnimation"
-        ) { speaking ->
-            if (speaking) {
-                Text(
-                    text = state.spokenText,
-                    style = TextStyle(fontSize = 16.sp, color = Color.White),
-                    textAlign = TextAlign.Center,
-                )
-            } else {
-                Text(
-                    text = state.spokenText,
-                    style = TextStyle(fontSize = 16.sp, color = Color.White),
-                    textAlign = TextAlign.Center,
                 )
             }
         }
@@ -241,7 +234,7 @@ fun Title(state: VoiceToTextParserState) {
                 .fillMaxWidth()
                 .padding(horizontal = 40.dp)
                 .height(50.dp)
-                .background(color = Grey03, shape = RoundedCornerShape(25.dp)),
+                .background(color = GreyPurple01, shape = RoundedCornerShape(25.dp)),
             contentAlignment = Alignment.Center
         ) {
             Text(
@@ -254,7 +247,7 @@ fun Title(state: VoiceToTextParserState) {
                         append("....".substring(0, animatedDots))
                     })
                 },
-                style = TextStyle(fontSize = 18.sp, color = Grey04),
+                style = TextStyle(fontSize = 18.sp, color = Grey01),
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -264,69 +257,3 @@ fun Title(state: VoiceToTextParserState) {
     }
 }
 
-
-
-@Composable
-fun ResetButton(voiceToTextParser: VoiceToTextParser) {
-    Surface(
-        color = Grey02,
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier
-            .size(width = 130.dp, height = 40.dp)
-            .clickable(
-                onClick = { voiceToTextParser.clearSpokenText() }
-            )
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly) {
-            Text(
-                text = "Reset",
-                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Grey01),
-                textAlign = TextAlign.Center
-            )
-            Icon(
-                imageVector = Icons.Default.Refresh,
-                contentDescription = "Reset Icon",
-                tint = Grey01
-            )
-        }
-    }
-}
-
-
-@Composable
-fun SendButton(state : VoiceToTextParserState, voiceToTextParser : VoiceToTextParser ){
-    Surface(
-        color = PrimaryGreen,
-        shape = RoundedCornerShape(20.dp),
-        modifier = Modifier
-            .size(width = 130.dp, height = 40.dp)
-            .clickable(
-                onClick = {
-//                    if (state.isSpeaking) {
-//                            voiceToTextParser.stopListening()
-//                        } else {
-//                            voiceToTextParser.startListening()
-//                        }
-                    Log.d("MyApp", state.spokenText)
-                }
-            ),
-
-    ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly) {
-            Text(
-
-                text = "Send",
-                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
-                textAlign = TextAlign.End
-            )
-            Icon(
-                imageVector = Icons.Default.Send,
-                contentDescription = "Search Icon",
-
-                tint = Color.Black
-            )
-        }
-    }
-}

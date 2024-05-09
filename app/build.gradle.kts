@@ -1,9 +1,21 @@
+
+
 plugins {
     alias(libs.plugins.androidApplication)
     alias(libs.plugins.jetbrainsKotlinAndroid)
 
     id("kotlin-kapt")
-    id("com.google.dagger.hilt.android")
+//    id("com.google.dagger.hilt.android")
+    id ("dagger.hilt.android.plugin")
+
+
+    id ("kotlin-android")
+
+
+
+
+
+
 
 
 
@@ -55,25 +67,29 @@ android {
     }
 }
 
-// Allow references to generated code
+//// Allow references to generated code
 kapt {
     correctErrorTypes = true
 }
+//
+//hilt {
+//    enableAggregatingTask = true
+//}
 
 
 dependencies {
 
-    implementation(libs.hilt.android)
-    kapt(libs.hilt.android.compiler)
-
-    implementation(libs.androidx.hilt.navigation.compose)
-//
-//    implementation (libs.iconify.android)
-//    implementation (libs.android.ionicons)
+    implementation ("com.google.dagger:hilt-android:2.46")
+    kapt ("com.google.dagger:hilt-android-compiler:2.46")
+//    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0")
+//    kapt ("androidx.hilt:hilt-compiler:1.0.0")
+    implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
     implementation(libs.androidx.material.icons.extended)
 
-
+//    retrofit and okhttp
+    implementation (libs.retrofit)
+    implementation (libs.okhttp)
 
     implementation(libs.androidx.core.ktx)
     implementation(libs.androidx.lifecycle.runtime.ktx)
