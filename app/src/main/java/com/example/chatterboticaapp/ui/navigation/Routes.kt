@@ -4,5 +4,5 @@ object Routes {
 
     const val HOMES_SCREEN = "Home";
 
-    const val LISTENING = "Listening";
+    const val SPEECH_LISTENING_SCREEN = "Listening";
 }

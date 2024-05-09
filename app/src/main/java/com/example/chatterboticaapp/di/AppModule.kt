@@ -2,6 +2,9 @@ package com.example.chatterboticaapp.di
 
 import android.app.Application
 import android.content.Context
+import androidx.fragment.app.Fragment
+import androidx.navigation.NavController
+import androidx.navigation.fragment.NavHostFragment
 import com.example.chatterboticaapp.data.remote.OpenAIApi
 import com.example.chatterboticaapp.data.repository.OpenAIApiImpl
 import com.example.chatterboticaapp.domain.repository.OpenAIApiRepository
@@ -40,6 +43,8 @@ object AppModule {
             .build()
             .create(OpenAIApi::class.java)
     }
+
+
 
     @Provides
     @Singleton

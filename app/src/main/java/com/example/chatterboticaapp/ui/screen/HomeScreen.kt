@@ -30,15 +30,28 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.BigBox
 import com.example.chatterboticaapp.ui.component.HistoryBox
 import com.example.chatterboticaapp.ui.component.MediumBox
+import com.example.chatterboticaapp.ui.navigation.Routes
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Grey01
+import com.example.chatterboticaapp.ui.viewmodel.HomeViewModel
+import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 
 @Composable
-fun HomeScreen(){
+fun HomeScreen(navController: NavController){
+        val viewModel: HomeViewModel = hiltViewModel()
+
+//        val navController = rememberNavController()
+//        viewModel.setNavController(navController)
+
+
+
         Column(modifier = Modifier
             .fillMaxSize()
             .background(color = Black01)
@@ -52,7 +65,7 @@ fun HomeScreen(){
                 modifier = Modifier.fillMaxWidth(),
                 horizontalArrangement = Arrangement.SpaceBetween
                 ) {
-                    BigBox()
+                    BigBox(onClick = { navController.navigate(Routes.SPEECH_LISTENING_SCREEN) })
                     Column {
                         MediumBox("Chat")
                         Spacer(modifier = Modifier.height(13.dp))
@@ -114,5 +127,5 @@ fun Profile(){
 @Preview
 @Composable
 fun HomeScreenPreview(){
-    HomeScreen()
+//    HomeScreen()
 }

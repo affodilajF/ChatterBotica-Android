@@ -30,7 +30,7 @@ import com.example.chatterboticaapp.ui.theme.PrimaryGreen
 import com.example.chatterboticaapp.utils.VoiceToTextParser
 
 @Composable
-fun TextButton(){
+fun TextButton(onClick: () -> Unit){
     Surface(
         color = Green01,
         shape = RoundedCornerShape(8.dp),
@@ -38,6 +38,7 @@ fun TextButton(){
             .size(width = 130.dp, height = 40.dp)
             .clickable(
                 onClick = {
+                    onClick()
                 }
             ),
 

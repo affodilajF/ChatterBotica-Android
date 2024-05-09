@@ -5,6 +5,7 @@ import androidx.navigation.compose.NavHost
 import androidx.navigation.compose.composable
 import androidx.navigation.compose.rememberNavController
 import com.example.chatterboticaapp.ui.screen.HomeScreen
+import com.example.chatterboticaapp.ui.screen.SpeechListeningScreen
 
 @Composable
 fun AppNavigationGraph(){
@@ -13,11 +14,11 @@ fun AppNavigationGraph(){
     NavHost(navController = navController, startDestination = Routes.HOMES_SCREEN){
 
         composable(Routes.HOMES_SCREEN){
-            HomeScreen()
+            HomeScreen(navController)
         }
 
-        composable(Routes.LISTENING){
-//            SpeechListening()
+        composable(Routes.SPEECH_LISTENING_SCREEN){
+            SpeechListeningScreen()
         }
 
     }

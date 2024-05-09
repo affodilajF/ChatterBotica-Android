@@ -6,6 +6,7 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
+import com.example.chatterboticaapp.ui.navigation.AppNavigationGraph
 import com.example.chatterboticaapp.ui.screen.HomeScreen
 import com.example.chatterboticaapp.utils.VoiceToTextParser
 import com.example.chatterboticaapp.ui.screen.SpeechListeningScreen
@@ -104,7 +105,9 @@ class MainActivity : ComponentActivity() {
 
 //                    SpeechListeningScreen(voiceToTextParser, MicrophoneUtils)
 //                    HomeScreen()
-                    SpeechListeningScreen()
+//                    SpeechListeningScreen()
+
+                    AppNavigationGraph()
 
                 }
             }

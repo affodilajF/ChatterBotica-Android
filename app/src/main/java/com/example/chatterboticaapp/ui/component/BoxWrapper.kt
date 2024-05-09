@@ -69,7 +69,7 @@ fun MediumBox(text: String){
 }
 
 @Composable
-fun BigBox(){
+fun BigBox(onClick: () -> Unit){
     Surface(
         modifier = Modifier
             .height(222.dp)
@@ -98,7 +98,7 @@ fun BigBox(){
                     },
                     Modifier.weight(1f)
                 )
-                TextButton()
+                TextButton(onClick)
             }
         }
     }
