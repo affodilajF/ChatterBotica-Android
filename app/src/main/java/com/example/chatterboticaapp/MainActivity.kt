@@ -102,9 +102,9 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    AppEntryPoint()
 
-                    SpeechListeningScreen(voiceToTextParser, MicrophoneUtils)
+//                    SpeechListeningScreen(voiceToTextParser, MicrophoneUtils)
 //                    HomeScreen()
-//                    SpeechListeningScreen()
+                    SpeechListeningScreen()
 
                 }
             }

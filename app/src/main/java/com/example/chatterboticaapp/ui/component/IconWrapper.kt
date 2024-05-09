@@ -26,7 +26,7 @@ fun RoundedIconWrapperMini(drawableIcon: Int, colorWrapper: Color){
     ) {
         Icon(
             painter = painterResource(drawableIcon),
-            contentDescription = "Chat Icon",
+            contentDescription = "Icon",
             tint = Grey01,
             modifier = Modifier.size(24.dp)
         )

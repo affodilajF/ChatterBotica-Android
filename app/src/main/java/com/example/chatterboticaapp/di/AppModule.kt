@@ -5,7 +5,9 @@ import android.content.Context
 import com.example.chatterboticaapp.data.remote.OpenAIApi
 import com.example.chatterboticaapp.data.repository.OpenAIApiImpl
 import com.example.chatterboticaapp.domain.repository.OpenAIApiRepository
+import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 import com.example.chatterboticaapp.utils.MicrophoneUtils
+import com.example.chatterboticaapp.utils.VoiceToTextParser
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -43,6 +45,18 @@ object AppModule {
     @Singleton
     fun provideOpenAIApiRepository(api : OpenAIApi, appContext: Application) : OpenAIApiRepository{
         return OpenAIApiImpl(api, appContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideVoiceToTextParser(appContext: Application): VoiceToTextParser {
+        return VoiceToTextParser(appContext)
+    }
+
+    @Provides
+    @Singleton
+    fun provideSpeechListeningViewModel(voiceToTextParser: VoiceToTextParser): SpeechListeningViewModel {
+        return SpeechListeningViewModel(voiceToTextParser)
     }
 
     @Provides

@@ -15,7 +15,7 @@ fun ChatScreen(){
     ) {
 
         Column {
-            Title()
+//            Title()
         }
 
     }
@@ -32,10 +32,10 @@ fun SquareMedium(){
 
 }
 
-@Composable
-fun Title(){
-
-}
+//@Composable
+//fun Title(){
+//
+//}
 
 
 

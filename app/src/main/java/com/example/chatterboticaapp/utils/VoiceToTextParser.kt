@@ -10,8 +10,9 @@ import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
 import com.example.chatterboticaapp.data.model.VoiceToTextParserState
+import javax.inject.Inject
 
-class VoiceToTextParser(private val app:Application) : RecognitionListener{
+class VoiceToTextParser @Inject constructor(private val app:Application) : RecognitionListener{
 
     private val _state = MutableStateFlow(VoiceToTextParserState())
     val state = _state.asStateFlow()
@@ -56,7 +57,7 @@ class VoiceToTextParser(private val app:Application) : RecognitionListener{
         }
     }
 
-    fun stopListening(){
+    public fun stopListening(){
         _state.update {
             it.copy(
                 isSpeaking = false

@@ -3,6 +3,9 @@ package com.example.chatterboticaapp.ui.screen
 
 
 import android.Manifest
+import android.content.Context
+import android.content.pm.PackageManager
+import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.AnimatedVisibility
@@ -35,6 +38,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -45,6 +49,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -56,9 +61,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
-import androidx.lifecycle.ViewModel
 import com.example.chatterboticaapp.R
-import com.example.chatterboticaapp.utils.VoiceToTextParser
 import com.example.chatterboticaapp.data.model.VoiceToTextParserState
 import com.example.chatterboticaapp.ui.component.Button
 import com.example.chatterboticaapp.ui.component.TextResultOfSpeech
@@ -68,8 +71,6 @@ import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
 import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
-import com.example.chatterboticaapp.utils.MicrophoneUtils
-import dagger.hilt.android.AndroidEntryPoint
 
 
 @Preview
@@ -78,22 +79,24 @@ fun SpeechListeningPreview(){
 }
 
 @Composable
-fun SpeechListeningScreen(voiceToTextParser : VoiceToTextParser, micUtil : MicrophoneUtils){
+fun SpeechListeningScreen(){
 
-    var canRecord by remember { mutableStateOf(true) }
+    val viewModel: SpeechListeningViewModel = hiltViewModel()
+    val state by viewModel.state.collectAsState()
+
+    var canRecord by remember { mutableStateOf(false) }
 
     val recordAudioLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
         canRecord = isGranted
-        voiceToTextParser.startListening(existedText = "")
+        viewModel.startListening(existedText = "")
     }
 
     LaunchedEffect(key1 = recordAudioLauncher) {
         recordAudioLauncher.launch(Manifest.permission.RECORD_AUDIO)
     }
 
-    val state by voiceToTextParser.state.collectAsState()
 
     Surface(modifier = Modifier
         .fillMaxSize()
@@ -112,7 +115,7 @@ fun SpeechListeningScreen(voiceToTextParser : VoiceToTextParser, micUtil : Micro
                 TextResultOfSpeech(state)
             }
             Box(modifier = Modifier.weight(2f)) {
-               SpeechListeningIcon(state, voiceToTextParser)
+               SpeechListeningIcon(state, viewModel)
             }
             Box(modifier = Modifier.weight(1.2f)) {
                 Row(modifier = Modifier
@@ -120,7 +123,7 @@ fun SpeechListeningScreen(voiceToTextParser : VoiceToTextParser, micUtil : Micro
                     horizontalArrangement = Arrangement.Center,
                 ){
                     Button(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
-                        voiceToTextParser.clearSpokenText()
+                        viewModel.clearSpokenText()
                     }
                     Spacer(modifier = Modifier.width(24.dp))
                     Button(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
@@ -132,30 +135,9 @@ fun SpeechListeningScreen(voiceToTextParser : VoiceToTextParser, micUtil : Micro
     }
 }
 
-//@Composable
-//fun SpeechListeningScreen() {
-//    val viewModel: ViewModel = hiltViewModel()
-//    val state by viewModel.state.collectAsState()
-//
-//    Surface(
-//        modifier = Modifier.fillMaxSize(),
-//        color = Color.Black
-//    ) {
-//        Column(
-//            modifier = Modifier.padding(16.dp),
-//            verticalArrangement = Arrangement.spacedBy(16.dp)
-//        ) {
-//            Title(state)
-//            TextResultOfSpeech(state)
-//            SpeechListeningIcon(state, viewModel)
-////            ActionButtons(state, viewModel)
-//        }
-//    }
-//}
-
 
 @Composable
-fun SpeechListeningIcon(state: VoiceToTextParserState, voiceToTextParser: VoiceToTextParser) {
+fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListeningViewModel) {
     val infiniteTransitionSpeech = rememberInfiniteTransition(label = "MicIcon")
 
     val iconResId = if (state.isSpeaking) R.drawable.baseline_mic_on_24 else R.drawable.baseline_mic_off_24
@@ -189,9 +171,9 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, voiceToTextParser: VoiceT
                     .clickable(
                         onClick = {
                             if (state.isSpeaking) {
-                                voiceToTextParser.stopListening()
+                                viewModel.stopListening()
                             } else {
-                                voiceToTextParser.startListening(existedText = state.spokenText)
+                                viewModel.startListening(existedText = state.spokenText)
                             }
                         }
                     )
@@ -232,7 +214,7 @@ fun Title(state: VoiceToTextParserState) {
         Box(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(horizontal = 40.dp)
+                .padding(horizontal = 35.dp)
                 .height(50.dp)
                 .background(color = GreyPurple01, shape = RoundedCornerShape(25.dp)),
             contentAlignment = Alignment.Center
@@ -247,7 +229,7 @@ fun Title(state: VoiceToTextParserState) {
                         append("....".substring(0, animatedDots))
                     })
                 },
-                style = TextStyle(fontSize = 18.sp, color = Grey01),
+                style = TextStyle(fontSize = 17.sp, color = Grey01),
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
