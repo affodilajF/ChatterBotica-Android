@@ -61,8 +61,8 @@ fun HomeScreen(navController: NavController){
             .padding(horizontal = 18.dp, vertical = 22.dp)
             ,
         ) {
-            Box(modifier = Modifier.weight(0.45f),
-                contentAlignment = Alignment.Center) {
+            Box(modifier = Modifier.weight(0.40f),
+                contentAlignment = Alignment.TopStart) {
                 TitleBar()
             }
             Row(
