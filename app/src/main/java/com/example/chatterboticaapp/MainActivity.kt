@@ -6,8 +6,8 @@ import androidx.activity.compose.setContent
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.material3.Surface
 import androidx.compose.ui.Modifier
-import com.example.chatterboticaapp.ui.navigation.AppNavigationGraph
-import com.example.chatterboticaapp.ui.screen.HomeScreen
+import androidx.navigation.compose.rememberNavController
+import com.example.chatterboticaapp.ui.screen.MainScreen
 import com.example.chatterboticaapp.utils.VoiceToTextParser
 import com.example.chatterboticaapp.ui.screen.SpeechListeningScreen
 import com.example.chatterboticaapp.ui.theme.Black01
@@ -103,11 +103,9 @@ class MainActivity : ComponentActivity() {
                 ) {
 //                    AppEntryPoint()
 
-//                    SpeechListeningScreen(voiceToTextParser, MicrophoneUtils)
-//                    HomeScreen()
-//                    SpeechListeningScreen()
 
-                    AppNavigationGraph()
+                    val navController = rememberNavController()
+                    MainScreen(navController)
 
                 }
             }

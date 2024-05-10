@@ -1,5 +1,6 @@
 package com.example.chatterboticaapp.ui.screen
 
+import android.annotation.SuppressLint
 import androidx.compose.foundation.BorderStroke
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -16,7 +17,9 @@ import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material3.BottomAppBar
 import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.ui.Alignment
@@ -38,6 +41,7 @@ import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.BigBox
 import com.example.chatterboticaapp.ui.component.HistoryBox
 import com.example.chatterboticaapp.ui.component.MediumBox
+import com.example.chatterboticaapp.ui.navigation.AppNavigationGraph
 import com.example.chatterboticaapp.ui.navigation.Routes
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Grey01
@@ -46,6 +50,8 @@ import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 
 
 
+
+@SuppressLint("UnusedMaterial3ScaffoldPaddingParameter")
 @Composable
 fun HomeScreen(navController: NavController){
 
@@ -80,11 +86,11 @@ fun HomeScreen(navController: NavController){
             LazyColumn(
                 modifier = Modifier.weight(2f)
             ) {
-                items(5) {
+                items(10) {
                     HistoryBox()
                 }
             }
-            BottomNavigationBar()
+
         }
     }
 

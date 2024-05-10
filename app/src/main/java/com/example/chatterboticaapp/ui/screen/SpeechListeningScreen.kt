@@ -100,8 +100,7 @@ fun SpeechListeningScreen(){
 
 
     Surface(modifier = Modifier
-        .fillMaxSize()
-        .padding(16.dp),
+        .fillMaxSize(),
         color = Black01,
         ) {
         Column(modifier = Modifier.fillMaxSize(),
