@@ -43,6 +43,8 @@ import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.viewmodel.HomeViewModel
 import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 
+
+
 @Composable
 fun HomeScreen(navController: NavController){
 
@@ -78,7 +80,9 @@ fun HomeScreen(navController: NavController){
                 HistoryBox()
                 HistoryBox()
                 HistoryBox()
+
             }
+            BottomNavigationBar()
         }
     }
 
@@ -95,12 +99,13 @@ fun TitleBar(){
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = "What you want ChatterBotica do for you?",
-                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Normal, color = Grey01),
+                style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, color = Grey01),
             )
         }
         Profile()
     }
 }
+
 
 
 
