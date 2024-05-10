@@ -14,6 +14,7 @@ import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.layout.size
+import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -76,11 +77,12 @@ fun HomeScreen(navController: NavController){
                     color = Grey01,
                     style = TextStyle(fontSize = 14.sp))
             }
-            Column(modifier = Modifier.weight(2f)) {
-                HistoryBox()
-                HistoryBox()
-                HistoryBox()
-
+            LazyColumn(
+                modifier = Modifier.weight(2f)
+            ) {
+                items(5) {
+                    HistoryBox()
+                }
             }
             BottomNavigationBar()
         }
