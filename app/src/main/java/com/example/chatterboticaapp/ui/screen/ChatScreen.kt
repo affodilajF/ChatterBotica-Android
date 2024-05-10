@@ -65,7 +65,7 @@ fun ChatScreen(){
         .background(color = Color.Black)
     ){
         Box(modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.Center) {
+            contentAlignment = Alignment.BottomCenter) {
 
         }
         Box(
@@ -116,6 +116,7 @@ fun TextFieldMessage() {
     var text by remember { mutableStateOf("Hello") }
 
     TextField(
+        modifier = Modifier.padding(horizontal = 5.dp),
         maxLines = 2,
         value = text,
         onValueChange = { text = it },
