@@ -3,6 +3,7 @@ package com.example.chatterboticaapp.ui.screen
 import android.app.Activity
 import android.graphics.Rect
 import android.view.ViewTreeObserver
+import android.view.WindowInsetsController
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Arrangement
@@ -19,6 +20,7 @@ import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.rememberScrollState
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.ExperimentalMaterial3Api
 import androidx.compose.material3.Scaffold
 import androidx.compose.material3.Surface
@@ -39,8 +41,12 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalSoftwareKeyboardController
+import androidx.compose.ui.platform.LocalView
+import androidx.compose.ui.text.AnnotatedString
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
+import androidx.compose.ui.text.input.TransformedText
+import androidx.compose.ui.text.input.VisualTransformation
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
@@ -49,6 +55,7 @@ import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.HistoryBox
 import com.example.chatterboticaapp.ui.component.RoundedIconWrapperMedium
 import com.example.chatterboticaapp.ui.component.RoundedIconWrapperMini
+import com.example.chatterboticaapp.ui.theme.Black00
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey03
@@ -60,21 +67,24 @@ import com.example.chatterboticaapp.utils.rememberImeState
 
 @Composable
 fun ChatScreen(){
+
+
+
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(color = Color.Black)
+        .background(color = Black01)
     ){
         Box(modifier = Modifier.weight(1f),
-            contentAlignment = Alignment.BottomCenter) {
-
+            contentAlignment = Alignment.Center) {
         }
         Box(
             modifier = Modifier
-                .weight(0.12f)
+                .weight(0.15f)
                 .padding(top = 4.dp)
         ) {
             Message()
         }
+        Spacer(modifier = Modifier.height(10.dp))
     }
 }
 
@@ -83,11 +93,12 @@ fun ChatScreen(){
 @Composable
 fun Message(){
     Surface(modifier = Modifier.fillMaxSize()) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceAround,
+        Row(
+            verticalAlignment = Alignment.Bottom,
             modifier = Modifier
                 .background(color = Black01)
-                .padding(horizontal = 16.dp))
+                .padding(horizontal = 16.dp, vertical = 12.dp)
+        )
         {
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterStart){
@@ -115,21 +126,24 @@ fun Message(){
 fun TextFieldMessage() {
     var text by remember { mutableStateOf("Hello") }
 
-    TextField(
-        modifier = Modifier.padding(horizontal = 5.dp),
-        maxLines = 2,
-        value = text,
-        onValueChange = { text = it },
-        textStyle = TextStyle(color = Color.White),
-        shape = RoundedCornerShape(15.dp),
-        colors = TextFieldDefaults.colors(
-            focusedIndicatorColor = Color.Transparent,
-            unfocusedIndicatorColor = Color.Transparent,
-            disabledIndicatorColor = Color.Transparent,
-            unfocusedContainerColor = GreyPurple03,
-            focusedContainerColor = GreyPurple03
-        ),
-    )
+    Box(
+        modifier = Modifier
+            .fillMaxWidth()
+            .background(color = GreyPurple01, shape =  RoundedCornerShape(8.dp))
+    ) {
+        BasicTextField(
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = 12.dp, vertical = 12.dp)
+            ,
+            value = text,
+            onValueChange = { text = it },
+            textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
+            decorationBox = { innerTextField ->
+                innerTextField()
+            },
+        )
+    }
 }
 
 

@@ -37,7 +37,7 @@ fun RoundedIconWrapperMini(drawableIcon: Int, colorWrapper: Color){
 fun RoundedIconWrapperMedium(drawableIcon: Int, colorWrapper: Color, colorIcon : Color){
     Box(
         modifier = Modifier
-            .size(50.dp)
+            .size(46.dp)
             .background(color = colorWrapper, shape = RoundedCornerShape(percent = 50)),
         contentAlignment = Alignment.Center
     ) {

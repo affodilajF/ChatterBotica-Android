@@ -58,6 +58,7 @@ fun ChatterBoticaAppTheme(
         SideEffect {
             val window = (view.context as Activity).window
             window.statusBarColor = Black01.toArgb()
+            window.navigationBarColor = Black01.toArgb()
             WindowCompat.getInsetsController(window, view).isAppearanceLightStatusBars = darkTheme
         }
     }
