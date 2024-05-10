@@ -34,6 +34,18 @@ fun RoundedIconWrapperMini(drawableIcon: Int, colorWrapper: Color){
 }
 
 @Composable
-fun RoundedIconWrapperMedium(){
-
+fun RoundedIconWrapperMedium(drawableIcon: Int, colorWrapper: Color, colorIcon : Color){
+    Box(
+        modifier = Modifier
+            .size(50.dp)
+            .background(color = colorWrapper, shape = RoundedCornerShape(percent = 50)),
+        contentAlignment = Alignment.Center
+    ) {
+        Icon(
+            painter = painterResource(drawableIcon),
+            contentDescription = "Icon",
+            tint = colorIcon,
+            modifier = Modifier.size(24.dp)
+        )
+    }
 }
