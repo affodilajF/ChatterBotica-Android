@@ -1,5 +1,8 @@
 package com.example.chatterboticaapp.ui.viewmodel
 
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.State
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import com.example.chatterboticaapp.data.model.VoiceToTextParserState
 import com.example.chatterboticaapp.utils.VoiceToTextParser
@@ -14,6 +17,8 @@ class SpeechListeningViewModel @Inject constructor(
     private val voiceToTextParser: VoiceToTextParser) : ViewModel(){
 
     val state = voiceToTextParser.state
+
+    var canRecord: MutableState<Boolean> = mutableStateOf(false)
 
     fun stopListening(){
         voiceToTextParser.stopListening()

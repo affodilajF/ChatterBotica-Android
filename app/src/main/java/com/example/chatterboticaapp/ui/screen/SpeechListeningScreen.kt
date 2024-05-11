@@ -40,6 +40,7 @@ import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
+import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
@@ -85,29 +86,22 @@ fun SpeechListeningScreen(){
     val viewModel: SpeechListeningViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
 
-    var canRecord by remember { mutableStateOf(false) }
-
-    val recordAudioLauncher = rememberLauncherForActivityResult(
-        contract = ActivityResultContracts.RequestPermission()
-    ) { isGranted ->
-        canRecord = isGranted
-        viewModel.startListening(existedText = "")
+//    ini udah mencakup record perms dan speaking state
+    val isSpeakingAllowed = remember(viewModel.canRecord.value, state.isSpeaking) {
+        viewModel.canRecord.value && state.isSpeaking
     }
 
-    LaunchedEffect(key1 = recordAudioLauncher) {
-        recordAudioLauncher.launch(Manifest.permission.RECORD_AUDIO)
-    }
-
+    RecordPermsLauncher(viewModel)
 
     Surface(modifier = Modifier
         .fillMaxSize(),
         color = Black01,
-        ) {
+    ) {
         Column(modifier = Modifier.fillMaxSize(),
-            ) {
+        ) {
             Box(modifier = Modifier.weight(1.5f),
                 contentAlignment = Alignment.Center) {
-                Title(state)
+                Title(isSpeakingAllowed)
             }
             Box(modifier = Modifier
                 .weight(2f)
@@ -115,7 +109,7 @@ fun SpeechListeningScreen(){
                 TextResultOfSpeech(state)
             }
             Box(modifier = Modifier.weight(2f)) {
-               SpeechListeningIcon(state, viewModel)
+                SpeechListeningIcon(state, viewModel, isSpeakingAllowed)
             }
             Box(modifier = Modifier.weight(1.2f)) {
                 Row(modifier = Modifier
@@ -135,17 +129,33 @@ fun SpeechListeningScreen(){
     }
 }
 
+@Composable
+fun RecordPermsLauncher(viewModel: SpeechListeningViewModel){
+    val recordAudioLauncher = rememberLauncherForActivityResult(
+        contract = ActivityResultContracts.RequestPermission()
+    ) { isGranted ->
+        viewModel.canRecord.value = isGranted
+        if(isGranted){
+            viewModel.startListening(existedText = "")
+        }
+    }
+
+    LaunchedEffect(key1 = recordAudioLauncher) {
+        recordAudioLauncher.launch(Manifest.permission.RECORD_AUDIO)
+    }
+}
+
 
 @Composable
-fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListeningViewModel) {
+fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListeningViewModel, isSpeakingAllowed: Boolean) {
     val infiniteTransitionSpeech = rememberInfiniteTransition(label = "MicIcon")
 
-    val iconResId = if (state.isSpeaking) R.drawable.baseline_mic_on_24 else R.drawable.baseline_mic_off_24
+    val iconResId = if (isSpeakingAllowed) R.drawable.baseline_mic_on_24 else R.drawable.baseline_mic_off_24
 
-    // Tentukan warna default dan animasi alpha berdasarkan state.isSpeaking
-    val boxColor = if (state.isSpeaking) GreyPurple03 else Black01
+    val boxColor = if (isSpeakingAllowed) GreyPurple03 else Black01
     val animatedAlpha by infiniteTransitionSpeech.animateFloat(
-        initialValue = if (state.isSpeaking) 0.2f else 1f,
+//        initialValue = if (state.isSpeaking && canRecord) 0.2f else 1f,
+        initialValue = if (isSpeakingAllowed) 0.2f else 1f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
             animation = tween(durationMillis = 500),
@@ -172,7 +182,11 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListenin
                         onClick = {
                             if (state.isSpeaking) {
                                 viewModel.stopListening()
-                            } else {
+                            }
+//                            else if (isSpeakingAllowed){
+//                                RecordPermsLauncher(viewModel)
+//                            }
+                            else {
                                 viewModel.startListening(existedText = state.spokenText)
                             }
                         }
@@ -183,7 +197,7 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListenin
             ) {
                 Icon(
                     painter = painterResource(id = iconResId),
-                    contentDescription = if (state.isSpeaking) "Keyboard Voice Icon" else "Search Icon",
+                    contentDescription = if (isSpeakingAllowed) "Mic On Icon" else "Mic Off Icon",
                     tint = Color.White,
                     modifier = Modifier.size(40.dp)
                 )
@@ -193,7 +207,7 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListenin
 }
 
 @Composable
-fun Title(state: VoiceToTextParserState) {
+fun Title(isSpeakingAllowed: Boolean) {
     val infiniteTransitionDots = rememberInfiniteTransition(label = "Dots")
 
     val animatedDots by infiniteTransitionDots.animateValue(
@@ -207,7 +221,8 @@ fun Title(state: VoiceToTextParserState) {
     )
 
     AnimatedVisibility(
-        visible = state.isSpeaking,
+//        visible = state.isSpeaking && canRecord,
+        visible = isSpeakingAllowed,
         enter = fadeIn(animationSpec = tween(durationMillis = 500)),
         exit = fadeOut(animationSpec = tween(durationMillis = 500))
     ) {

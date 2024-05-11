@@ -57,7 +57,7 @@ class VoiceToTextParser @Inject constructor(private val app:Application) : Recog
         }
     }
 
-    public fun stopListening(){
+    fun stopListening(){
         _state.update {
             it.copy(
                 isSpeaking = false
