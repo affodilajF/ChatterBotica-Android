@@ -41,6 +41,8 @@ import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.BigBox
 import com.example.chatterboticaapp.ui.component.HistoryBox
 import com.example.chatterboticaapp.ui.component.MediumBox
+import com.example.chatterboticaapp.ui.component.MediumProfile
+import com.example.chatterboticaapp.ui.component.TitleBar
 import com.example.chatterboticaapp.ui.navigation.AppNavigationGraph
 import com.example.chatterboticaapp.ui.navigation.Routes
 import com.example.chatterboticaapp.ui.theme.Black01
@@ -94,41 +96,13 @@ fun HomeScreen(navController: NavController){
         }
     }
 
-@Composable
-fun TitleBar(){
-    Row (modifier = Modifier.fillMaxWidth(),
-        verticalAlignment = Alignment.CenterVertically,
-        horizontalArrangement = Arrangement.SpaceBetween){
-        Column {
-            Text(
-                text = "Hello, Affodilaj!",
-                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White),
-            )
-            Spacer(modifier = Modifier.height(5.dp))
-            Text(
-                text = "What you want ChatterBotica do for you?",
-                style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, color = Grey01),
-            )
-        }
-        Profile()
-    }
-}
 
 
 
 
 
-@Composable
-fun Profile(){
-    Image(
-        painter = painterResource(id = R.drawable.temprofilepic),
-        contentDescription = "profile pic",
-        modifier = Modifier
-            .size(56.dp)
-            .padding(4.dp)
-            .clip(CircleShape)
-    )
-}
+
+
 
 
 

@@ -4,7 +4,10 @@ import androidx.compose.animation.AnimatedContent
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
+import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.fillMaxSize
+import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.size
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Text
@@ -109,5 +112,25 @@ fun TextResultOfSpeech(state: VoiceToTextParserState) {
                 )
             }
         }
+    }
+}
+
+@Composable
+fun TitleBar(){
+    Row (modifier = Modifier.fillMaxWidth(),
+        verticalAlignment = Alignment.CenterVertically,
+        horizontalArrangement = Arrangement.SpaceBetween){
+        Column {
+            Text(
+                text = "Hello, Affodilaj!",
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White),
+            )
+            Spacer(modifier = Modifier.height(5.dp))
+            Text(
+                text = "What you want ChatterBotica do for you?",
+                style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, color = Grey01),
+            )
+        }
+        MediumProfile()
     }
 }
