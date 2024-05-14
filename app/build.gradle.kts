@@ -79,6 +79,8 @@ kapt {
 
 dependencies {
 
+    implementation("com.google.ai.client.generativeai:generativeai:0.4.0")
+
     implementation ("com.google.dagger:hilt-android:2.46")
     implementation(libs.androidx.navigation.fragment.ktx)
     kapt ("com.google.dagger:hilt-android-compiler:2.46")
