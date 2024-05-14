@@ -8,6 +8,8 @@ plugins {
 //    id("com.google.dagger.hilt.android")
     id ("dagger.hilt.android.plugin")
 
+//    id("multiplatform")
+
 
     id ("kotlin-android")
 
@@ -78,6 +80,12 @@ kapt {
 
 
 dependencies {
+
+    implementation("org.jetbrains.kotlinx:kotlinx-coroutines-core:1.8.0")
+    implementation("nl.marc-apps:tts:2.5.0")
+
+    // Optional: Extensions for Compose
+    implementation("nl.marc-apps:tts-compose:2.5.0")
 
     implementation("com.google.ai.client.generativeai:generativeai:0.4.0")
 

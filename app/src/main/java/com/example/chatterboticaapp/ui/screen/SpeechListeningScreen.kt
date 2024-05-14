@@ -5,6 +5,7 @@ package com.example.chatterboticaapp.ui.screen
 import android.Manifest
 import android.content.Context
 import android.content.pm.PackageManager
+import android.util.Log
 import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
@@ -72,6 +73,7 @@ import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
+import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
 import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 
 
@@ -85,6 +87,8 @@ fun SpeechListeningScreen(){
 
     val viewModel: SpeechListeningViewModel = hiltViewModel()
     val state by viewModel.state.collectAsState()
+
+    val viewModel2: GenerativeAIViewModel = hiltViewModel()
 
 //    ini udah mencakup record perms dan speaking state
     val isSpeakingAllowed = remember(viewModel.canRecord.value, state.isSpeaking) {
@@ -121,7 +125,9 @@ fun SpeechListeningScreen(){
                     }
                     Spacer(modifier = Modifier.width(24.dp))
                     IconTextButton(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
-
+//                        val result = viewModel2.getResponseRequest(state.spokenText)
+                        val result = viewModel2.getResponseRequest("do you know banana?")
+                        Log.d("MyComposable", "Hasil dari generative model: $result")
                     }
                 }
             }

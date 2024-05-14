@@ -1,5 +1,6 @@
 package com.example.chatterboticaapp.ui.component
 
+import android.util.Log
 import androidx.compose.foundation.background
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
@@ -24,11 +25,12 @@ import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
-
+import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
 
 
 @Composable
-fun ChatMenuUtility(){
+fun ChatMenuUtility(generativeAIViewModel: GenerativeAIViewModel){
+
     Surface(modifier = Modifier.fillMaxSize()) {
         Row(
             verticalAlignment = Alignment.Bottom,
@@ -39,46 +41,32 @@ fun ChatMenuUtility(){
         {
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterStart){
-                RoundedIconWrapperMedium(drawableIcon = R.drawable.pdf, GreyPurple01, Color.White)
+                RoundedIconWrapperMedium(drawableIcon = R.drawable.pdf, GreyPurple01, Color.White){
+
+                }
             }
             Box(modifier = Modifier.weight(1.8f),
                 contentAlignment = Alignment.Center){
-                TextFieldInput()
+//                TextFieldInput()
             }
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
-                RoundedIconWrapperMedium(drawableIcon = R.drawable.micoff, GreyPurple01, Color.White)
+                RoundedIconWrapperMedium(drawableIcon = R.drawable.micoff, GreyPurple01, Color.White){
+
+                }
 
             }
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
-                RoundedIconWrapperMedium(drawableIcon = R.drawable.send, Green01, Color.Black)
+                RoundedIconWrapperMedium(drawableIcon = R.drawable.send, Green01, Color.Black){
+                    val result = generativeAIViewModel.getResponseRequest("Do you know Mangga in Indonesia?")
+                    Log.d("MyComposable", "Hasil dari generative model: $result")
+
+
+                }
 
             }
         }
     }
 }
 
-@Composable
-fun TextFieldInput() {
-    var text by remember { mutableStateOf("Hello") }
-
-    Box(
-        modifier = Modifier
-            .fillMaxWidth()
-            .background(color = GreyPurple01, shape = RoundedCornerShape(8.dp))
-    ) {
-        BasicTextField(
-            modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 12.dp, vertical = 13.dp)
-            ,
-            value = text,
-            onValueChange = { text = it },
-            textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
-            decorationBox = { innerTextField ->
-                innerTextField()
-            },
-        )
-    }
-}

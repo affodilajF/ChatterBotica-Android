@@ -14,6 +14,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
@@ -28,6 +29,7 @@ import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.PrimaryGreen
 import com.example.chatterboticaapp.utils.VoiceToTextParser
+import kotlinx.coroutines.launch
 
 @Composable
 fun TextButton(onClick: () -> Unit){
@@ -61,18 +63,21 @@ fun IconTextButton(icon: Int,
            txtColor: Color,
            btnColor: Color,
            btnTxt: String,
-           onClickFunction: () -> Unit)
+           onClickFunction: suspend () -> Unit)
 {
+
+    val coroutineScope = rememberCoroutineScope()
+
     Surface(
         color = btnColor,
         shape = RoundedCornerShape(20.dp),
         modifier = Modifier
             .size(width = 135.dp, height = 44.dp)
-            .clickable(
-                onClick = {
+            .clickable {
+                coroutineScope.launch {
                     onClickFunction()
                 }
-            ),
+            }
 
         ) {
         Row(verticalAlignment = Alignment.CenterVertically,

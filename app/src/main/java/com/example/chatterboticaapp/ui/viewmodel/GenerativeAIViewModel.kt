@@ -29,7 +29,7 @@ class GenerativeAIViewModel @Inject constructor(): ViewModel() {
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-pro",
-        apiKey = ""
+        apiKey = "AIzaSyBe7LVJujMRD2LHtV2v3nTeBDMS_0b8wqg"
     )
 
 

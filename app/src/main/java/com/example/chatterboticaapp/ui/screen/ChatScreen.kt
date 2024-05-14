@@ -59,6 +59,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.ChatMenuUtility
 import com.example.chatterboticaapp.ui.component.HistoryBox
@@ -72,11 +73,16 @@ import com.example.chatterboticaapp.ui.theme.Grey03
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
 import com.example.chatterboticaapp.ui.theme.GreyPurple04
+import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
 import com.example.chatterboticaapp.utils.KeyboardListener
 import com.example.chatterboticaapp.utils.rememberImeState
+import dagger.hilt.android.lifecycle.HiltViewModel
 
 @Composable
 fun ChatScreen(){
+
+    val viewModel: GenerativeAIViewModel = hiltViewModel()
+
     Column(modifier = Modifier
         .fillMaxSize()
         .background(color = Black01)
@@ -98,10 +104,12 @@ fun ChatScreen(){
                 .weight(0.2f)
                 .padding(top = 4.dp)
         ) {
-            ChatMenuUtility()
+            ChatMenuUtility(viewModel)
         }
     }
 }
+
+
 
 
 
