@@ -47,7 +47,7 @@ fun ChatMenuUtility(generativeAIViewModel: GenerativeAIViewModel){
             }
             Box(modifier = Modifier.weight(1.8f),
                 contentAlignment = Alignment.Center){
-//                TextFieldInput()
+                TextInputField()
             }
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
@@ -59,10 +59,7 @@ fun ChatMenuUtility(generativeAIViewModel: GenerativeAIViewModel){
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
                 RoundedIconWrapperMedium(drawableIcon = R.drawable.send, Green01, Color.Black){
-                    val result = generativeAIViewModel.getResponseRequest("Do you know Mangga in Indonesia?")
-                    Log.d("MyComposable", "Hasil dari generative model: $result")
-
-
+                   generativeAIViewModel.fetchResponse("Do you know Mangga in Indonesia?")
                 }
 
             }

@@ -37,17 +37,12 @@ fun RoundedIconWrapperMini(drawableIcon: Int, colorWrapper: Color){
 }
 
 @Composable
-fun RoundedIconWrapperMedium(drawableIcon: Int, colorWrapper: Color, colorIcon : Color, onClickFunction : suspend () -> Unit){
-
-    val coroutineScope = rememberCoroutineScope()
-
+fun RoundedIconWrapperMedium(drawableIcon: Int, colorWrapper: Color, colorIcon : Color, onClickFunction :() -> Unit){
     Box(
         modifier = Modifier
             .size(46.dp)
             .clickable {
-                coroutineScope.launch {
-                    onClickFunction()
-                }
+                onClickFunction()
             }
             .background(color = colorWrapper, shape = RoundedCornerShape(percent = 50)),
         contentAlignment = Alignment.Center
