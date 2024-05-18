@@ -1,15 +1,8 @@
 package com.example.chatterboticaapp.ui.screen
-
-
-
 import android.Manifest
-import android.content.Context
-import android.content.pm.PackageManager
 import android.util.Log
-import androidx.activity.ComponentActivity
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
-import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.animation.core.RepeatMode
 import androidx.compose.animation.core.VectorConverter
 import androidx.compose.animation.core.animateFloat
@@ -17,17 +10,14 @@ import androidx.compose.animation.core.animateValue
 import androidx.compose.animation.core.infiniteRepeatable
 import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
-import androidx.compose.animation.fadeIn
-import androidx.compose.animation.fadeOut
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
-
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
-
 import androidx.compose.foundation.layout.Column
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.Spacer
+import androidx.compose.foundation.layout.fillMaxHeight
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
 import androidx.compose.foundation.layout.height
@@ -39,19 +29,13 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
-import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
-import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
-import androidx.compose.runtime.setValue
-
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
@@ -66,7 +50,6 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.data.model.VoiceToTextParserState
 import com.example.chatterboticaapp.ui.component.IconTextButton
-
 import com.example.chatterboticaapp.ui.component.TextResultOfSpeech
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
@@ -74,8 +57,8 @@ import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
 import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
-import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
-
+import com.example.chatterboticaapp.ui.viewmodel.STTViewModel
+import com.example.chatterboticaapp.ui.viewmodel.TTSViewModel
 
 @Preview
 @Composable
@@ -85,17 +68,20 @@ fun SpeechListeningPreview(){
 @Composable
 fun SpeechListeningScreen(){
 
-    val viewModel: SpeechListeningViewModel = hiltViewModel()
-    val state by viewModel.state.collectAsState()
+    val ttsViewModel : TTSViewModel = hiltViewModel()
+    val sttViewModel: STTViewModel = hiltViewModel()
+    val generativeAIViewModel: GenerativeAIViewModel = hiltViewModel()
 
-    val viewModel2: GenerativeAIViewModel = hiltViewModel()
+    val voiceToTextState by sttViewModel.state.collectAsState()
+    val mediaPlayingState by ttsViewModel.isMediaPlayingState.collectAsState()
+    val playHTFetchingState by ttsViewModel.isPlayHTFetchingState.collectAsState()
 
 //    ini udah mencakup record perms dan speaking state
-    val isSpeakingAllowed = remember(viewModel.canRecord.value, state.isSpeaking) {
-        viewModel.canRecord.value && state.isSpeaking
+    val isSpeakingAllowed = remember(sttViewModel.canRecord.value, voiceToTextState.isSpeaking) {
+        sttViewModel.canRecord.value && voiceToTextState.isSpeaking
     }
 
-    RecordPermsLauncher(viewModel)
+    RecordPermsLauncher(sttViewModel)
 
     Surface(modifier = Modifier
         .fillMaxSize(),
@@ -105,29 +91,59 @@ fun SpeechListeningScreen(){
         ) {
             Box(modifier = Modifier.weight(1.5f),
                 contentAlignment = Alignment.Center) {
-                Title(isSpeakingAllowed)
+               if(isSpeakingAllowed){
+                   Title("listening ",  80)
+               } else if(mediaPlayingState){
+                   Title("speaking ",  80)
+               } else if (playHTFetchingState){
+//                   Title(playHTFetchingState, "FETCHING")
+               }
             }
             Box(modifier = Modifier
                 .weight(2f)
-                .padding(horizontal = 40.dp)) {
-                TextResultOfSpeech(state)
+                .padding(horizontal = 40.dp)
+
+            ) {
+//                RobotIconTalking()
+
+                if(!mediaPlayingState){
+                    TextResultOfSpeech(voiceToTextState)
+                }
+                if(playHTFetchingState){
+                    Title("fetching ", 40)
+                }
+                if(mediaPlayingState && !playHTFetchingState){
+                    RobotIconTalking()
+                }
+
             }
             Box(modifier = Modifier.weight(2f)) {
-                SpeechListeningIcon(state, viewModel, isSpeakingAllowed)
+
+                if(!mediaPlayingState && !playHTFetchingState){
+                    SpeechListeningIcon(voiceToTextState, sttViewModel, isSpeakingAllowed)
+                }
+
+
             }
             Box(modifier = Modifier.weight(1.2f)) {
-                Row(modifier = Modifier
-                    .fillMaxWidth(),
-                    horizontalArrangement = Arrangement.Center,
-                ){
-                    IconTextButton(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
-                        viewModel.clearSpokenText()
-                    }
-                    Spacer(modifier = Modifier.width(24.dp))
-                    IconTextButton(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
-//                        val result = viewModel2.getResponseRequest(state.spokenText)
-                        val result = viewModel2.getResponseRequest("do you know banana?")
-                        Log.d("MyComposable", "Hasil dari generative model: $result")
+                if(!mediaPlayingState && !playHTFetchingState){
+                    Row(modifier = Modifier
+                        .fillMaxWidth(),
+                        horizontalArrangement = Arrangement.Center,
+                    ){
+                        IconTextButton(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
+                            sttViewModel.clearSpokenText()
+                        }
+                        Spacer(modifier = Modifier.width(24.dp))
+                        IconTextButton(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
+
+                            generativeAIViewModel.fetchResponse(voiceToTextState.spokenText) { result ->
+                                Log.d("MyComposable", "Hasil dari generative model yeah: ${result.response}")
+                                ttsViewModel.generateSpeech(result.response)
+                                sttViewModel.clearSpokenText()
+
+                            }
+                        }
                     }
                 }
             }
@@ -135,14 +151,19 @@ fun SpeechListeningScreen(){
     }
 }
 
+
+
+
+
+
 @Composable
-fun RecordPermsLauncher(viewModel: SpeechListeningViewModel){
+fun RecordPermsLauncher(sttViewModel: STTViewModel){
     val recordAudioLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
-        viewModel.canRecord.value = isGranted
+        sttViewModel.canRecord.value = isGranted
         if(isGranted){
-            viewModel.startListening(existedText = "")
+            sttViewModel.startListening(existedText = "")
         }
     }
 
@@ -151,16 +172,56 @@ fun RecordPermsLauncher(viewModel: SpeechListeningViewModel){
     }
 }
 
+@Composable
+fun RobotIconTalking(){
+
+    val infiniteTransitionDots = rememberInfiniteTransition(label = "Dots.")
+    val animatedDots by infiniteTransitionDots.animateValue(
+        initialValue = 0,
+        targetValue = 5,
+        typeConverter = Int.VectorConverter,
+        animationSpec = infiniteRepeatable(
+            animation = tween(durationMillis = 1500),
+            repeatMode = RepeatMode.Restart
+        ), label = "Dots."
+    )
+
+    Column(modifier = Modifier
+        .fillMaxWidth()
+        .fillMaxHeight(),
+        horizontalAlignment = Alignment.CenterHorizontally
+    ) {
+        Box(modifier = Modifier.weight(2f), contentAlignment = Alignment.Center) {
+            Icon(
+                painter = painterResource(id = R.drawable.robot),
+                contentDescription = "ya",
+                tint = Green01,
+                modifier = Modifier.size(220.dp)
+            )
+        }
+
+        Box(modifier = Modifier.weight(0.3f)
+        ){
+            Text(
+                text = buildAnnotatedString {
+                    append("....".substring(0, animatedDots)) },
+                style = TextStyle(fontSize = 37.sp, color = Green01),
+                textAlign = TextAlign.Center,
+                modifier = Modifier
+                    .fillMaxWidth()
+            )
+        }
+    }
+}
 
 @Composable
-fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListeningViewModel, isSpeakingAllowed: Boolean) {
+fun SpeechListeningIcon(state: VoiceToTextParserState, sttViewModel: STTViewModel, isSpeakingAllowed: Boolean) {
     val infiniteTransitionSpeech = rememberInfiniteTransition(label = "MicIcon")
 
     val iconResId = if (isSpeakingAllowed) R.drawable.baseline_mic_on_24 else R.drawable.baseline_mic_off_24
 
     val boxColor = if (isSpeakingAllowed) GreyPurple03 else Black01
     val animatedAlpha by infiniteTransitionSpeech.animateFloat(
-//        initialValue = if (state.isSpeaking && canRecord) 0.2f else 1f,
         initialValue = if (isSpeakingAllowed) 0.2f else 1f,
         targetValue = 1f,
         animationSpec = infiniteRepeatable(
@@ -187,13 +248,9 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListenin
                     .clickable(
                         onClick = {
                             if (state.isSpeaking) {
-                                viewModel.stopListening()
-                            }
-//                            else if (isSpeakingAllowed){
-//                                RecordPermsLauncher(viewModel)
-//                            }
-                            else {
-                                viewModel.startListening(existedText = state.spokenText)
+                                sttViewModel.stopListening()
+                            } else {
+                                sttViewModel.startListening(existedText = state.spokenText)
                             }
                         }
                     )
@@ -213,7 +270,7 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListenin
 }
 
 @Composable
-fun Title(isSpeakingAllowed: Boolean) {
+fun Title(text: String, padding: Int) {
     val infiniteTransitionDots = rememberInfiniteTransition(label = "Dots")
 
     val animatedDots by infiniteTransitionDots.animateValue(
@@ -226,25 +283,19 @@ fun Title(isSpeakingAllowed: Boolean) {
         ), label = "Dots"
     )
 
-    AnimatedVisibility(
-//        visible = state.isSpeaking && canRecord,
-        visible = isSpeakingAllowed,
-        enter = fadeIn(animationSpec = tween(durationMillis = 500)),
-        exit = fadeOut(animationSpec = tween(durationMillis = 500))
-    ) {
-        Box(
-            modifier = Modifier
+    Box(
+        modifier = Modifier
                 .fillMaxWidth()
                 .padding(horizontal = 35.dp)
                 .height(50.dp)
                 .background(color = GreyPurple01, shape = RoundedCornerShape(25.dp)),
             contentAlignment = Alignment.Center
-        ) {
-            Text(
+    ) {
+        Text(
                 text = buildAnnotatedString {
                     append("Botica is ")
-                    withStyle(style = SpanStyle(fontWeight = FontWeight.Bold)) {
-                        append("listening")
+                    withStyle(style = SpanStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)) {
+                        append(text)
                     }
                     append(buildAnnotatedString {
                         append("....".substring(0, animatedDots))
@@ -254,9 +305,8 @@ fun Title(isSpeakingAllowed: Boolean) {
                 textAlign = TextAlign.Start,
                 modifier = Modifier
                     .fillMaxWidth()
-                    .padding(horizontal = 54.dp)
-            )
-        }
+                    .padding(horizontal = padding.dp)
+        )
     }
 }
 

@@ -59,7 +59,7 @@ fun ChatMenuUtility(generativeAIViewModel: GenerativeAIViewModel){
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
                 RoundedIconWrapperMedium(drawableIcon = R.drawable.send, Green01, Color.Black){
-                   generativeAIViewModel.fetchResponse("Do you know Mangga in Indonesia?")
+
                 }
 
             }

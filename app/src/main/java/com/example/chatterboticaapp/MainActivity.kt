@@ -34,7 +34,10 @@ class MainActivity : ComponentActivity() {
         setContent {
 
             ChatterBoticaAppTheme {
-                Surface(modifier = Modifier.safeDrawingPadding().fillMaxSize().background(color = Black01))
+                Surface(modifier = Modifier
+                    .safeDrawingPadding()
+                    .fillMaxSize()
+                    .background(color = Black01))
                 {
                     val navController = rememberNavController()
                     MainScreen(navController)
@@ -43,6 +46,8 @@ class MainActivity : ComponentActivity() {
             }
         }
     }
+
+
 }
 
 
