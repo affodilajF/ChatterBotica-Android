@@ -1,34 +1,74 @@
 package com.example.chatterboticaapp.di
 
 import android.app.Application
-import android.content.Context
-import androidx.fragment.app.Fragment
-import androidx.navigation.NavController
-import androidx.navigation.fragment.NavHostFragment
+import com.example.chatterboticaapp.data.model.ResponseInterceptor
 import com.example.chatterboticaapp.data.remote.OpenAIApi
+import com.example.chatterboticaapp.data.remote.PlayHTApiService
+import com.example.chatterboticaapp.data.repository.GeminiAiRepositoryImpl
 import com.example.chatterboticaapp.data.repository.OpenAIApiImpl
+import com.example.chatterboticaapp.data.repository.PlayHTRepositoryImpl
+import com.example.chatterboticaapp.domain.repository.GeminiAiRepository
 import com.example.chatterboticaapp.domain.repository.OpenAIApiRepository
-import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
-import com.example.chatterboticaapp.utils.MicrophoneUtils
+import com.example.chatterboticaapp.domain.repository.PlayHTRepository
+import com.example.chatterboticaapp.ui.viewmodel.STTViewModel
+import com.example.chatterboticaapp.ui.viewmodel.TTSViewModel
 import com.example.chatterboticaapp.utils.VoiceToTextParser
+import com.google.gson.GsonBuilder
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
+import retrofit2.converter.gson.GsonConverterFactory
 import javax.inject.Named
 import javax.inject.Singleton
+
 
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
-//    @Singleton
-//    @Provides
-//    fun provideMicrophoneUtils(@ApplicationContext context: Context): MicrophoneUtils {
-//        return MicrophoneUtils(context)
+
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient {
+        val interceptor = ResponseInterceptor()
+        return OkHttpClient.Builder()
+            .addInterceptor(interceptor) // Tambahkan Interceptor ke OkHttpClient
+            .build()
+    }
+//    fun provideOkHttpClient(): OkHttpClient {
+//        return OkHttpClient.Builder().build()
 //    }
+
+    @Provides
+    @Singleton
+    fun providePlayHTRetrofit(okHttpClient: OkHttpClient): Retrofit {
+
+        val gson = GsonBuilder()
+            .setLenient()
+            .create()
+
+        return Retrofit.Builder()
+            .baseUrl("https://play.ht/api/v2/")
+            .client(okHttpClient)
+            .addConverterFactory(GsonConverterFactory.create(gson))
+            .build()
+    }
+
+
+    @Provides
+    @Singleton
+    fun providePlayHTRepository(apiService: PlayHTApiService): PlayHTRepository {
+        return PlayHTRepositoryImpl(apiService)
+    }
+
+    @Provides
+    @Singleton
+    fun providePlayHTApiService(retrofit: Retrofit): PlayHTApiService {
+        return retrofit.create(PlayHTApiService::class.java)
+    }
 
     @Provides
     @Singleton
@@ -44,8 +84,6 @@ object AppModule {
             .create(OpenAIApi::class.java)
     }
 
-
-
     @Provides
     @Singleton
     fun provideOpenAIApiRepository(api : OpenAIApi, appContext: Application) : OpenAIApiRepository{
@@ -54,14 +92,25 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideGeminiAiRepository() : GeminiAiRepository {
+        return GeminiAiRepositoryImpl();
+    }
+    @Provides
+    @Singleton
     fun provideVoiceToTextParser(appContext: Application): VoiceToTextParser {
         return VoiceToTextParser(appContext)
     }
 
     @Provides
     @Singleton
-    fun provideSpeechListeningViewModel(voiceToTextParser: VoiceToTextParser): SpeechListeningViewModel {
-        return SpeechListeningViewModel(voiceToTextParser)
+    fun provideSpeechListeningViewModel(voiceToTextParser: VoiceToTextParser): STTViewModel {
+        return STTViewModel(voiceToTextParser)
+    }
+
+    @Provides
+    @Singleton
+    fun provideTTSViewModel(appContext: Application, playHTRepository: PlayHTRepository): TTSViewModel {
+        return TTSViewModel(playHTRepository, appContext)
     }
 
     @Provides
