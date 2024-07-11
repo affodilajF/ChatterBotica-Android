@@ -20,8 +20,7 @@ import com.example.chatterboticaapp.ui.theme.GreyPurple01
 
 
 @Composable
-fun TextInputField() {
-    var text by remember { mutableStateOf("Hello") }
+fun TextInputField(text: String, onTextChange: (String) -> Unit) {
 
     Box(
         modifier = Modifier
@@ -34,7 +33,7 @@ fun TextInputField() {
                 .padding(horizontal = 12.dp, vertical = 13.dp)
             ,
             value = text,
-            onValueChange = { text = it },
+            onValueChange = onTextChange,
             textStyle = TextStyle(color = Color.White, fontSize = 14.sp),
             decorationBox = { innerTextField ->
                 innerTextField()

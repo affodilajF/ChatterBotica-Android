@@ -10,6 +10,7 @@ import com.example.chatterboticaapp.data.repository.PlayHTRepositoryImpl
 import com.example.chatterboticaapp.domain.repository.GeminiAiRepository
 import com.example.chatterboticaapp.domain.repository.OpenAIApiRepository
 import com.example.chatterboticaapp.domain.repository.PlayHTRepository
+import com.example.chatterboticaapp.ui.viewmodel.ChatViewModel
 import com.example.chatterboticaapp.ui.viewmodel.STTViewModel
 import com.example.chatterboticaapp.ui.viewmodel.TTSViewModel
 import com.example.chatterboticaapp.utils.VoiceToTextParser
@@ -111,6 +112,11 @@ object AppModule {
     @Singleton
     fun provideTTSViewModel(appContext: Application, playHTRepository: PlayHTRepository): TTSViewModel {
         return TTSViewModel(playHTRepository, appContext)
+    }
+    @Provides
+    @Singleton
+    fun provideChatViewModel(): ChatViewModel {
+        return ChatViewModel(provideGeminiAiRepository())
     }
 
     @Provides

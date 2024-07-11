@@ -6,6 +6,7 @@ import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Row
 import androidx.compose.foundation.layout.fillMaxSize
 import androidx.compose.foundation.layout.fillMaxWidth
+import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
@@ -29,9 +30,11 @@ import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
 
 
 @Composable
-fun ChatMenuUtility(generativeAIViewModel: GenerativeAIViewModel){
+fun ChatMenuUtility(text: String, onTextChange: (String) -> Unit, onClickSend: () -> Unit){
 
-    Surface(modifier = Modifier.fillMaxSize()) {
+    Surface(modifier = Modifier
+        .height(80.dp)
+    ) {
         Row(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier
@@ -42,12 +45,14 @@ fun ChatMenuUtility(generativeAIViewModel: GenerativeAIViewModel){
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterStart){
                 RoundedIconWrapperMedium(drawableIcon = R.drawable.pdf, GreyPurple01, Color.White){
-
                 }
             }
             Box(modifier = Modifier.weight(1.8f),
                 contentAlignment = Alignment.Center){
-                TextInputField()
+                TextInputField(
+                    text = text,
+                    onTextChange = onTextChange
+                )
             }
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
@@ -59,7 +64,7 @@ fun ChatMenuUtility(generativeAIViewModel: GenerativeAIViewModel){
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
                 RoundedIconWrapperMedium(drawableIcon = R.drawable.send, Green01, Color.Black){
-
+                    onClickSend()
                 }
 
             }

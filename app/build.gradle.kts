@@ -103,11 +103,13 @@ dependencies {
 
     implementation ("com.google.dagger:hilt-android:2.46")
     implementation(libs.androidx.navigation.fragment.ktx)
+    implementation(libs.androidx.runtime.livedata)
     kapt ("com.google.dagger:hilt-android-compiler:2.46")
 //    implementation ("androidx.hilt:hilt-lifecycle-viewmodel:1.0.0")
 //    kapt ("androidx.hilt:hilt-compiler:1.0.0")
     implementation ("androidx.hilt:hilt-navigation-compose:1.0.0")
 
+    implementation(libs.androidx.material.icons.extended)
     implementation(libs.androidx.material.icons.extended)
 
 //    retrofit and okhttp
