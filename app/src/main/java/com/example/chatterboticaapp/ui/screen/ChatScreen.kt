@@ -6,6 +6,11 @@ import android.graphics.Rect
 import android.util.Log
 import android.view.ViewTreeObserver
 import android.view.WindowInsetsController
+import androidx.compose.animation.core.RepeatMode
+import androidx.compose.animation.core.VectorConverter
+import androidx.compose.animation.core.animateValue
+import androidx.compose.animation.core.infiniteRepeatable
+import androidx.compose.animation.core.rememberInfiniteTransition
 import androidx.compose.animation.core.tween
 import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
@@ -43,6 +48,7 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.text.TextStyle
+import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
@@ -91,13 +97,10 @@ fun ChatScreen() {
                     LaunchedEffect(item.response) {
                         isResponseReady = item.response != ""
                     }
-
                     if(isResponseReady){
-                        TextMessageResponse(username = "Response", text = item.response, item = item)
+                        TextMessageResponse(username = "Botica", text= item.response)
                     } else {
-                        Text(text = "cek",
-                            style = TextStyle(color = Color.White, fontSize = 14.sp)
-                        )
+                        TextMessageResponse(username = "Botica", "...")
                     }
                 }
             }
@@ -135,3 +138,4 @@ fun keyboardAsState(): State<Boolean> {
 fun ChatScreenPreview(){
     ChatScreen()
 }
+
