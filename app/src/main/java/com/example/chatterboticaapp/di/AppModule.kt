@@ -22,6 +22,7 @@ import dagger.hilt.components.SingletonComponent
 import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Named
 import javax.inject.Singleton
 
@@ -36,12 +37,12 @@ object AppModule {
     fun provideOkHttpClient(): OkHttpClient {
         val interceptor = ResponseInterceptor()
         return OkHttpClient.Builder()
-            .addInterceptor(interceptor) // Tambahkan Interceptor ke OkHttpClient
+            .connectTimeout(30, TimeUnit.SECONDS)
+            .writeTimeout(30, TimeUnit.SECONDS)
+            .readTimeout(30, TimeUnit.SECONDS)
+            .addInterceptor(interceptor)
             .build()
     }
-//    fun provideOkHttpClient(): OkHttpClient {
-//        return OkHttpClient.Builder().build()
-//    }
 
     @Provides
     @Singleton
