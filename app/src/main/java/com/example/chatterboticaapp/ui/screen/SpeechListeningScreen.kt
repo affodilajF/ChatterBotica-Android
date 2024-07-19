@@ -48,7 +48,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatterboticaapp.R
-import com.example.chatterboticaapp.data.model.VoiceToTextParserState
+import com.example.chatterboticaapp.data.model.local.VoiceToTextParserState
 import com.example.chatterboticaapp.ui.component.IconTextButton
 import com.example.chatterboticaapp.ui.component.TextResultOfSpeech
 import com.example.chatterboticaapp.ui.theme.Black01

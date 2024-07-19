@@ -1,11 +1,8 @@
 package com.example.chatterboticaapp.ui.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.example.chatterboticaapp.data.model.GeminiAiResponse
+import com.example.chatterboticaapp.data.model.remote.GeminiAiResponse
 import com.example.chatterboticaapp.domain.repository.GeminiAiRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch

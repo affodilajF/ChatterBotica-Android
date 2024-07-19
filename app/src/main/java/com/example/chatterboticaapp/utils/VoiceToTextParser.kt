@@ -9,7 +9,7 @@ import android.speech.SpeechRecognizer
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.asStateFlow
 import kotlinx.coroutines.flow.update
-import com.example.chatterboticaapp.data.model.VoiceToTextParserState
+import com.example.chatterboticaapp.data.model.local.VoiceToTextParserState
 import javax.inject.Inject
 
 class VoiceToTextParser @Inject constructor(private val app:Application) : RecognitionListener{

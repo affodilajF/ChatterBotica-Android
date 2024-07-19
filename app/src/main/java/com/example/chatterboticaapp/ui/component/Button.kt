@@ -1,6 +1,5 @@
 package com.example.chatterboticaapp.ui.component
 
-import android.util.Log
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Row
@@ -8,8 +7,6 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
-import androidx.compose.material.icons.Icons
-import androidx.compose.material.icons.filled.Send
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,11 +21,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
-import com.example.chatterboticaapp.data.model.VoiceToTextParserState
 import com.example.chatterboticaapp.ui.theme.Green01
-import com.example.chatterboticaapp.ui.theme.Grey01
-import com.example.chatterboticaapp.ui.theme.PrimaryGreen
-import com.example.chatterboticaapp.utils.VoiceToTextParser
 import kotlinx.coroutines.launch
 
 @Composable

@@ -1,7 +1,5 @@
-package com.example.chatterboticaapp.data.model
+package com.example.chatterboticaapp.data.model.remote
 
-import com.google.gson.annotations.SerializedName
-import java.io.File
 import java.util.Date
 
 //data class PlayHTResponse (

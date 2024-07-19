@@ -1,8 +1,7 @@
-package com.example.chatterboticaapp.data.model
+package com.example.chatterboticaapp.data.model.remote
 
 import com.google.gson.Gson
 import okhttp3.Interceptor
-import okhttp3.Response
 
 class ResponseInterceptor : Interceptor {
     override fun intercept(chain: Interceptor.Chain): okhttp3.Response {

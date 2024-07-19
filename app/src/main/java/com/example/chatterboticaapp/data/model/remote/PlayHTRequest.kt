@@ -1,4 +1,4 @@
-package com.example.chatterboticaapp.data.model
+package com.example.chatterboticaapp.data.model.remote
 
 //data class TextToSpeechRequest(
 //    val text: String,
