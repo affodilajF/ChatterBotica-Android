@@ -58,7 +58,7 @@ fun MainScreen(navController: NavHostController){
         selectedItem = when (currentRoute) {
             Routes.HOMES_SCREEN -> 0
             Routes.CHAT_SCREEN -> 1
-            Routes.SPEECH_LISTENING_SCREEN -> 0
+            Routes.SPEECH_LISTENING_SCREEN -> 2
             Routes.DOCS_SCREEN -> 3
             else -> 0
         }
@@ -98,6 +98,7 @@ fun MainScreen(navController: NavHostController){
                 }
             }
         }
+
     ){
         AppNavigationGraph(navController = navController)
     }

@@ -12,9 +12,11 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.foundation.text.BasicTextField
 import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
@@ -30,7 +32,11 @@ import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
 
 
 @Composable
-fun ChatMenuUtility(text: String, onTextChange: (String) -> Unit, onClickSend: () -> Unit){
+fun ChatMenuUtility(isFetchingParam : Boolean, text: String, onTextChange: (String) -> Unit, onClickSend: () -> Unit, onClickMic: ()->Unit){
+
+    val isFetching by rememberUpdatedState(isFetchingParam)
+    val color = if (isFetching) Color.Gray else Green01
+    val iconResId = if (isFetching) R.drawable.baseline_rectangle_24 else R.drawable.send
 
     Surface(modifier = Modifier
         .height(80.dp)
@@ -57,13 +63,14 @@ fun ChatMenuUtility(text: String, onTextChange: (String) -> Unit, onClickSend: (
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
                 RoundedIconWrapperMedium(drawableIcon = R.drawable.micoff, GreyPurple01, Color.White){
-
+                    onClickMic()
                 }
 
             }
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
-                RoundedIconWrapperMedium(drawableIcon = R.drawable.send, Green01, Color.Black){
+
+                RoundedIconWrapperMedium(drawableIcon = iconResId, color, Color.Black){
                     onClickSend()
                 }
 

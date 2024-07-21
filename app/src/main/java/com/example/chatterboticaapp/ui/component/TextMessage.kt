@@ -22,13 +22,13 @@ import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import com.example.chatterboticaapp.R
 
 
 @Composable
 fun TextMessageRequest(username: String, text: String){
-
     Row(modifier = Modifier.padding(bottom = 30.dp)) {
-        MiniProfile()
+        MiniProfile(R.drawable.temprofilepic)
         Spacer(modifier = Modifier.width(7.dp))
         Column{
             Text(text = username, style = TextStyle(color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp))
@@ -64,7 +64,7 @@ fun TextMessageResponse(username: String, text: String){
     }
 
     Row(modifier = Modifier.padding(bottom = 30.dp)) {
-        MiniProfile()
+        MiniProfile(R.drawable.robot)
         Spacer(modifier = Modifier.width(7.dp))
         Column{
             Text(text = username, style = TextStyle(color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp))

@@ -1,6 +1,7 @@
 package com.example.chatterboticaapp.ui.component
 
 import androidx.compose.foundation.background
+import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
 import androidx.compose.foundation.layout.Box
 import androidx.compose.foundation.layout.Column
@@ -27,10 +28,12 @@ import androidx.compose.ui.text.withStyle
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
+import com.example.chatterboticaapp.data.model.local.SessionChats
 import com.example.chatterboticaapp.ui.theme.Grey00
 import com.example.chatterboticaapp.ui.theme.Grey04
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
+import com.example.chatterboticaapp.utils.TimestampUtils
 
 @Composable
 fun MediumBox(text: String){
@@ -105,9 +108,12 @@ fun BigBox(onClick: () -> Unit){
 }
 
 @Composable
-fun HistoryBox(){
+fun HistoryBox(history : SessionChats, onClick: () -> Unit){
     Box(modifier = Modifier
         .fillMaxWidth()
+        .clickable {
+            onClick()
+        }
         .padding(bottom = 16.dp)
         .background(color = Grey04, shape = RoundedCornerShape(percent = 40)),
     ) {
@@ -118,12 +124,12 @@ fun HistoryBox(){
             horizontalArrangement = Arrangement.SpaceBetween){
             Column {
                 Text(
-                    text = "What is mangga?",
+                    text = history.title,
                     style = TextStyle(fontSize = 14.sp, color = Color.White),
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = "Today",
+                    text = TimestampUtils.convertStringToTimestamp(history.timestamp),
                     style = TextStyle(fontSize = 8.sp, color = Color.White),
                 )
 

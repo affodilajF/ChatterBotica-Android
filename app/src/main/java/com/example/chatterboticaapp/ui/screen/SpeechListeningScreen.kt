@@ -29,6 +29,7 @@ import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.DisposableEffect
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
@@ -83,6 +84,13 @@ fun SpeechListeningScreen(){
 
     RecordPermsLauncher(sttViewModel)
 
+    DisposableEffect(Unit) {
+        onDispose {
+            sttViewModel.clearSpokenText()
+            sttViewModel.stopListening()
+        }
+    }
+
     Surface(modifier = Modifier
         .fillMaxSize(),
         color = Black01,
@@ -91,13 +99,13 @@ fun SpeechListeningScreen(){
         ) {
             Box(modifier = Modifier.weight(1.5f),
                 contentAlignment = Alignment.Center) {
-               if(isSpeakingAllowed){
-                   Title("listening ",  80)
-               } else if(mediaPlayingState){
-                   Title("speaking ",  80)
-               } else if (playHTFetchingState){
+                if(isSpeakingAllowed){
+                    Title("listening ",  80)
+                } else if(mediaPlayingState){
+                    Title("speaking ",  80)
+                } else if (playHTFetchingState){
 //                   Title(playHTFetchingState, "FETCHING")
-               }
+                }
             }
             Box(modifier = Modifier
                 .weight(2f)
@@ -285,28 +293,27 @@ fun Title(text: String, padding: Int) {
 
     Box(
         modifier = Modifier
-                .fillMaxWidth()
-                .padding(horizontal = 35.dp)
-                .height(50.dp)
-                .background(color = GreyPurple01, shape = RoundedCornerShape(25.dp)),
-            contentAlignment = Alignment.Center
+            .fillMaxWidth()
+            .padding(horizontal = 35.dp)
+            .height(50.dp)
+            .background(color = GreyPurple01, shape = RoundedCornerShape(25.dp)),
+        contentAlignment = Alignment.Center
     ) {
         Text(
-                text = buildAnnotatedString {
-                    append("Botica is ")
-                    withStyle(style = SpanStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)) {
-                        append(text)
-                    }
-                    append(buildAnnotatedString {
-                        append("....".substring(0, animatedDots))
-                    })
-                },
-                style = TextStyle(fontSize = 17.sp, color = Grey01),
-                textAlign = TextAlign.Start,
-                modifier = Modifier
-                    .fillMaxWidth()
-                    .padding(horizontal = padding.dp)
+            text = buildAnnotatedString {
+                append("Botica is ")
+                withStyle(style = SpanStyle(fontSize = 12.sp, fontWeight = FontWeight.Bold)) {
+                    append(text)
+                }
+                append(buildAnnotatedString {
+                    append("....".substring(0, animatedDots))
+                })
+            },
+            style = TextStyle(fontSize = 17.sp, color = Grey01),
+            textAlign = TextAlign.Start,
+            modifier = Modifier
+                .fillMaxWidth()
+                .padding(horizontal = padding.dp)
         )
     }
 }
-

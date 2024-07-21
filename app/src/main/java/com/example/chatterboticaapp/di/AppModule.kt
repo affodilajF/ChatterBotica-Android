@@ -1,16 +1,19 @@
 package com.example.chatterboticaapp.di
 
 import android.app.Application
-import com.example.chatterboticaapp.data.model.ResponseInterceptor
+import androidx.room.Room
+import com.example.chatterboticaapp.data.local.dao.SessionChatsDAO
+import com.example.chatterboticaapp.data.local.database.AppDatabase
+import com.example.chatterboticaapp.data.model.remote.ResponseInterceptor
 import com.example.chatterboticaapp.data.remote.OpenAIApi
 import com.example.chatterboticaapp.data.remote.PlayHTApiService
 import com.example.chatterboticaapp.data.repository.GeminiAiRepositoryImpl
 import com.example.chatterboticaapp.data.repository.OpenAIApiImpl
 import com.example.chatterboticaapp.data.repository.PlayHTRepositoryImpl
+import com.example.chatterboticaapp.domain.repository.SessionChatsRepository
 import com.example.chatterboticaapp.domain.repository.GeminiAiRepository
 import com.example.chatterboticaapp.domain.repository.OpenAIApiRepository
 import com.example.chatterboticaapp.domain.repository.PlayHTRepository
-import com.example.chatterboticaapp.ui.viewmodel.ChatViewModel
 import com.example.chatterboticaapp.ui.viewmodel.STTViewModel
 import com.example.chatterboticaapp.ui.viewmodel.TTSViewModel
 import com.example.chatterboticaapp.utils.VoiceToTextParser
@@ -23,7 +26,6 @@ import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
 import java.util.concurrent.TimeUnit
-import javax.inject.Named
 import javax.inject.Singleton
 
 
@@ -31,6 +33,21 @@ import javax.inject.Singleton
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
+
+    @Provides
+    @Singleton
+    fun provideAppDatabase(appContext: Application): AppDatabase {
+        return Room.databaseBuilder(
+            appContext,
+            AppDatabase::class.java, "app_db"
+        ).build()
+    }
+
+    @Provides
+    @Singleton
+    fun provideSessionChatsDao(database: AppDatabase): SessionChatsDAO {
+        return database.sessionChatsDao()
+    }
 
     @Provides
     @Singleton
@@ -88,6 +105,12 @@ object AppModule {
 
     @Provides
     @Singleton
+    fun provideSessionChatsRepository(sessionChatsDao: SessionChatsDAO) : SessionChatsRepository {
+        return SessionChatsRepository(sessionChatsDao)
+    }
+
+    @Provides
+    @Singleton
     fun provideOpenAIApiRepository(api : OpenAIApi, appContext: Application) : OpenAIApiRepository{
         return OpenAIApiImpl(api, appContext)
     }
@@ -114,19 +137,6 @@ object AppModule {
     fun provideTTSViewModel(appContext: Application, playHTRepository: PlayHTRepository): TTSViewModel {
         return TTSViewModel(playHTRepository, appContext)
     }
-    @Provides
-    @Singleton
-    fun provideChatViewModel(): ChatViewModel {
-        return ChatViewModel(provideGeminiAiRepository())
-    }
 
-    @Provides
-    @Singleton
-    @Named("hello1")
-    fun provideString1() = "Hello 1"
 
-    @Provides
-    @Singleton
-    @Named("hello2")
-    fun provideString2() = "Hello 2"
 }

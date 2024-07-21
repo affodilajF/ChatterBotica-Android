@@ -17,7 +17,7 @@ import javax.inject.Inject
 
 
 @HiltViewModel
-class TTSViewModel @Inject constructor(private val repository: PlayHTRepository, private val context: Context) : ViewModel() {
+class TTSViewModel @Inject constructor(private val repository: PlayHTRepository) : ViewModel() {
 
     private var mediaPlayer: MediaPlayer? = null
     private var _isMediaPlaying = MutableStateFlow(false) // State Flow untuk status pemutaran audio

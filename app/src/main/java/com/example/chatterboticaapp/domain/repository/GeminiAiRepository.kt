@@ -1,6 +1,6 @@
 package com.example.chatterboticaapp.domain.repository
 
-import com.example.chatterboticaapp.data.model.GeminiAiResponse
+import com.example.chatterboticaapp.data.model.remote.GeminiAiResponse
 
 interface GeminiAiRepository {
 

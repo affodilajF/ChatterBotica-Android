@@ -2,10 +2,6 @@ package com.example.chatterboticaapp.data.model.remote
 
 import java.util.Date
 
-//data class PlayHTResponse (
-//    val audio_url: String
-//)
-
 data class Input(
     val output_format: String,
     val quality: String,

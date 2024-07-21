@@ -88,7 +88,7 @@ class VoiceToTextParser @Inject constructor(private val app:Application) : Recog
             )
         }
 
-//        recognizer.stopListening()
+        recognizer.stopListening()
     }
 
     override fun onError(error: Int) {
@@ -110,7 +110,7 @@ class VoiceToTextParser @Inject constructor(private val app:Application) : Recog
             ?.let { result ->
                 _state.update { currentState ->
                     currentState.copy(
-                        spokenText = currentState.spokenText + " " + result
+                        spokenText = currentState.spokenText + result + " "
                     )
                 }
             }
