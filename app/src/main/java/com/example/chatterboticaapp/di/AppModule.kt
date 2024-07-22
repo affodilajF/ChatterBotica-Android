@@ -135,7 +135,7 @@ object AppModule {
     @Provides
     @Singleton
     fun provideTTSViewModel(appContext: Application, playHTRepository: PlayHTRepository): TTSViewModel {
-        return TTSViewModel(playHTRepository, appContext)
+        return TTSViewModel(playHTRepository)
     }
 
 

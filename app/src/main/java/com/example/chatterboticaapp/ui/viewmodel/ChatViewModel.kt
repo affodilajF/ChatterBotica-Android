@@ -1,9 +1,11 @@
 package com.example.chatterboticaapp.ui.viewmodel
 
+import android.content.Context
 import android.util.Log
 import androidx.compose.runtime.MutableState
 import androidx.compose.runtime.State
 import androidx.compose.runtime.mutableStateOf
+import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -14,6 +16,7 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 import com.example.chatterboticaapp.data.local.converters.JsonConverter
 import com.example.chatterboticaapp.domain.repository.SessionChatsRepository
+import com.example.chatterboticaapp.utils.PDFUtils
 import com.example.chatterboticaapp.utils.TimestampUtils
 import com.example.chatterboticaapp.utils.VoiceToTextParser
 import kotlinx.coroutines.Dispatchers
@@ -39,6 +42,12 @@ class ChatViewModel @Inject constructor(
     val isFetching: State<Boolean> get() = _isFetching
     fun setIsFetching(value: Boolean){
         _isFetching.value = value
+    }
+
+    // generate pdf
+    fun generatePdf(ctx: Context, filename: String){
+        val allChatList: List<GeminiAiResponse>? = _allChat.value
+        PDFUtils.createPdfFile(allChatList, ctx, filename)
     }
 
     // placing history session chat

@@ -81,6 +81,37 @@ kapt {
 
 dependencies {
 
+    //PDF
+    implementation("com.itextpdf:itext7-core:7.2.2")
+    //Room
+    val roomversion = "2.6.1"
+
+    implementation("androidx.room:room-runtime:$roomversion")
+    annotationProcessor("androidx.room:room-compiler:$roomversion")
+
+    // To use Kotlin annotation processing tool (kapt)
+    kapt("androidx.room:room-compiler:$roomversion")
+    // To use Kotlin Symbol Processing (KSP)
+//    ksp("androidx.room:room-compiler:$room_version")
+
+    // optional - Kotlin Extensions and Coroutines support for Room
+    implementation("androidx.room:room-ktx:$roomversion")
+
+    // optional - RxJava2 support for Room
+    implementation("androidx.room:room-rxjava2:$roomversion")
+
+    // optional - RxJava3 support for Room
+    implementation("androidx.room:room-rxjava3:$roomversion")
+
+    // optional - Guava support for Room, including Optional and ListenableFuture
+    implementation("androidx.room:room-guava:$roomversion")
+
+    // optional - Test helpers
+    testImplementation("androidx.room:room-testing:$roomversion")
+
+    // optional - Paging 3 Integration
+    implementation("androidx.room:room-paging:$roomversion")
+
     //Media3
 //    implementation ("androidx.media3:media3-exoplayer:1.3.0")
 //    implementation ("androidx.media3:media3-ui:1.3.0")

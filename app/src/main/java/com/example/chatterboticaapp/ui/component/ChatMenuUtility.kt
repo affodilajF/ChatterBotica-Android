@@ -32,7 +32,7 @@ import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
 
 
 @Composable
-fun ChatMenuUtility(isFetchingParam : Boolean, text: String, onTextChange: (String) -> Unit, onClickSend: () -> Unit, onClickMic: ()->Unit){
+fun ChatMenuUtility(isFetchingParam : Boolean, text: String, onTextChange: (String) -> Unit, onClickSend: () -> Unit, onClickMic: ()->Unit, onClickPdf: ()-> Unit){
 
     val isFetching by rememberUpdatedState(isFetchingParam)
     val color = if (isFetching) Color.Gray else Green01
@@ -51,11 +51,15 @@ fun ChatMenuUtility(isFetchingParam : Boolean, text: String, onTextChange: (Stri
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterStart){
                 RoundedIconWrapperMedium(drawableIcon = R.drawable.pdf, GreyPurple01, Color.White){
+                    onClickPdf()
                 }
             }
             Box(modifier = Modifier.weight(1.8f),
                 contentAlignment = Alignment.Center){
                 TextInputField(
+                    txtHint = "",
+                    txtColor = Color.White,
+                    bgColor = GreyPurple01,
                     text = text,
                     onTextChange = onTextChange
                 )

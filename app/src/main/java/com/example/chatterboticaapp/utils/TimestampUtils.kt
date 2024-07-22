@@ -3,6 +3,8 @@ package com.example.chatterboticaapp.utils
 import android.annotation.SuppressLint
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
+import java.util.Calendar
+import java.util.Locale
 import kotlin.math.abs
 import kotlin.math.floor
 
@@ -25,5 +27,12 @@ object TimestampUtils {
         val minutes = floor((durationMillis.toDouble() / (1000 * 60)) % 60).toInt()
 
         return "$hours hours $minutes mins ago"
+    }
+
+    fun getToday() : String{
+        val calendar = Calendar.getInstance()
+        val dateFormat = SimpleDateFormat("EEEE MMMM dd, yyyy 'at' HH:mm a", Locale.US)
+
+        return dateFormat.format(calendar.time)
     }
 }

@@ -37,6 +37,7 @@ import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
@@ -45,10 +46,12 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.ChatMenuUtility
+import com.example.chatterboticaapp.ui.component.GeneratePdfDialog
 import com.example.chatterboticaapp.ui.component.SpeechTextDialog
 import com.example.chatterboticaapp.ui.component.TextMessageRequest
 import com.example.chatterboticaapp.ui.component.TextMessageResponse
@@ -61,6 +64,8 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
     var text by remember { mutableStateOf("") }
     var query by remember { mutableStateOf("") }
     var isExit by remember { mutableStateOf(false) }
+    var isGeneratePdfClicked by remember { mutableStateOf(false) }
+    var pdfFileName by remember { mutableStateOf("") }
 
     val chatViewModel: ChatViewModel = hiltViewModel()
     val itemListState by chatViewModel.allChat.observeAsState(initial = emptyList())
@@ -70,6 +75,8 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
     val isFetching = chatViewModel.isFetching.value
 
     val voiceToTextState by chatViewModel.state.collectAsState()
+
+    val context = LocalContext.current
 
     // Handle back navigation
     LocalOnBackPressedDispatcherOwner.current?.let {
@@ -134,6 +141,13 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
         SpeechTextDialog()
     }
 
+    if(isGeneratePdfClicked){
+        GeneratePdfDialog(onDismiss = { isGeneratePdfClicked = false}, onGeneratePdf =  {
+            chatViewModel.generatePdf(context, pdfFileName)
+            isGeneratePdfClicked = false
+        }, onTextChange = {newText -> pdfFileName = newText}, pdfFileName = pdfFileName )
+    }
+
     // If spokenText is alr received (as a result of VoiceToTextParser.override onEndOfSpeech()), its time to fetch gpt response
     // by activating setIsFetching
     LaunchedEffect(voiceToTextState.spokenText) {
@@ -194,6 +208,9 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
                         // launch permission request dialog
                         recordAudioLauncher.launch(RECORD_AUDIO)
                     }
+                },
+                onClickPdf = {
+                    isGeneratePdfClicked = true
                 }
             )
         }

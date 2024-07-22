@@ -108,6 +108,7 @@ class MainActivity : ComponentActivity() {
 //                                                            restoreState = true
 //                                                        }
                                                         when(index){
+                                                            0 -> {navController.navigate(Routes.HOMES_SCREEN)}
                                                             1 -> {navController.navigate(Routes.CHAT_SCREEN+"/0") }
                                                             2-> {navController.navigate(Routes.SPEECH_LISTENING_SCREEN)}
                                                             3-> {navController.navigate(Routes.DOCS_SCREEN)}
