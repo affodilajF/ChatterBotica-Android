@@ -2,6 +2,7 @@ package com.example.chatterboticaapp.utils
 
 import android.content.Context
 import android.content.Intent
+import android.provider.MediaStore
 import androidx.core.content.FileProvider
 import com.example.chatterboticaapp.data.model.remote.GeminiAiResponse
 import com.itextpdf.io.font.PdfEncodings
@@ -20,6 +21,23 @@ import java.util.UUID
 
 object PDFUtils {
 
+    fun deletePdfFile(context: Context, file: File): Boolean {
+        return try {
+            val deleted = file.delete()
+            if (deleted) {
+                context.contentResolver.delete(
+                    MediaStore.Files.getContentUri("external"),
+                    "${MediaStore.Files.FileColumns.DATA}=?",
+                    arrayOf(file.absolutePath)
+                )
+            }
+            deleted
+        } catch (e: Exception) {
+            e.printStackTrace()
+            false
+        }
+    }
+
     fun openPdfFile(context: Context, file: File) {
         val fileUri = FileProvider.getUriForFile(context, "${context.packageName}.fileprovider", file)
         val intent = Intent(Intent.ACTION_VIEW).apply {
@@ -34,7 +52,7 @@ object PDFUtils {
         return directory?.listFiles { _, name -> name.endsWith(".pdf") }?.toList() ?: emptyList()
     }
 
-    fun createPdfFile(content: List<GeminiAiResponse>?, context: Context, pdfFileName: String) {
+    fun createPdfFile(content: List<GeminiAiResponse>?, context: Context, pdfFileName: String): File? {
         val filePath = "${context.getExternalFilesDir(null)}/${pdfFileName}.pdf"
         val file = File(filePath)
 
@@ -75,8 +93,10 @@ object PDFUtils {
                     }
                 }
             }
+            return file
         } catch (e: Exception) {
             e.printStackTrace()
+            return null
         }
     }
 }

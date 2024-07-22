@@ -9,6 +9,7 @@ import androidx.compose.ui.platform.LocalContext
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.example.chatterboticaapp.data.model.local.SessionChats
 import com.example.chatterboticaapp.data.model.remote.GeminiAiResponse
 import com.example.chatterboticaapp.domain.repository.GeminiAiRepository
@@ -20,7 +21,11 @@ import com.example.chatterboticaapp.utils.PDFUtils
 import com.example.chatterboticaapp.utils.TimestampUtils
 import com.example.chatterboticaapp.utils.VoiceToTextParser
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.flow.MutableStateFlow
+import kotlinx.coroutines.flow.StateFlow
+import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
+import java.io.File
 import java.util.UUID
 
 @HiltViewModel
@@ -32,6 +37,11 @@ class ChatViewModel @Inject constructor(
 
     private val jsonConverter = JsonConverter()
 
+    // chat id
+    private var idSessionChat : Long = 0
+    fun setIdSessionChat(id: Long){
+        idSessionChat = id
+    }
     // allchat
     private var _allChat = MutableLiveData<List<GeminiAiResponse>>(emptyList())
     val allChat: LiveData<List<GeminiAiResponse>>
@@ -45,18 +55,37 @@ class ChatViewModel @Inject constructor(
     }
 
     // generate pdf
-    fun generatePdf(ctx: Context, filename: String){
-        val allChatList: List<GeminiAiResponse>? = _allChat.value
-        PDFUtils.createPdfFile(allChatList, ctx, filename)
+    private var _pdfFile = MutableStateFlow<File?>(null)
+    val pdfFile : StateFlow<File?> get() = _pdfFile
+
+    fun openPdfFile(context: Context){
+        _pdfFile.value?.let { PDFUtils.openPdfFile(context, it) }
+    }
+
+    fun generatePdf(ctx: Context, filename: String) {
+        viewModelScope.launch {
+            var res: File? = null
+            try {
+                val allChatList: List<GeminiAiResponse>? = _allChat.value
+                if (allChatList != null) {
+                    res = withContext(Dispatchers.IO) {
+                        PDFUtils.createPdfFile(allChatList, ctx, filename)
+                    }
+                }
+            } finally {
+                _pdfFile.value = res
+            }
+        }
+
     }
 
     // placing history session chat
-    suspend fun setHistorySessionChat(chatSessionId: Long) {
-        sessionChatsRepository.getSessionChatById(chatSessionId)?.let {sessionChats ->
+    suspend fun setHistorySessionChat() {
+        sessionChatsRepository.getSessionChatById(idSessionChat)?.let {sessionChats ->
             jsonConverter.fromJson(sessionChats.chatsJson).values.toList().also {
                 _allChat.value = it
             }
-            sessionChatsRepository.deleteSessionChat(sessionChats)
+//            sessionChatsRepository.deleteSessionChat(sessionChats)
         }
     }
 
@@ -97,6 +126,12 @@ class ChatViewModel @Inject constructor(
         }
     }
 
+    suspend fun updateSessionChatDb() {
+        _allChat.value?.takeIf { it.isNotEmpty() }?.let {
+            sessionChatsRepository.updateSessionChat(convertChatSession())
+        }
+    }
+
     private fun convertChatSession(): SessionChats {
         val chatMap = _allChat.value?.associateBy {UUID.randomUUID().toString() } ?: emptyMap()
         val json = jsonConverter.toJson(chatMap)
@@ -108,7 +143,11 @@ class ChatViewModel @Inject constructor(
         if (lastIndex != -1) {
             lastGeminiAiResponse = allChatList?.get(lastIndex)?.request.toString()
         }
-        return SessionChats(timestamp = TimestampUtils.getCurrentTimestamp(), chatsJson = json, title = lastGeminiAiResponse)
+        return if(idSessionChat>0){
+            SessionChats(id= idSessionChat, timestamp = TimestampUtils.getCurrentTimestampLong(), chatsJson = json, title = lastGeminiAiResponse)
+        } else {
+            SessionChats(timestamp = TimestampUtils.getCurrentTimestampLong(), chatsJson = json, title = lastGeminiAiResponse)
+        }
     }
 
 

@@ -2,6 +2,7 @@ package com.example.chatterboticaapp.ui.screen
 
 import android.content.Context
 import android.content.Intent
+import android.widget.Toast
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
 import com.example.chatterboticaapp.R
+import com.example.chatterboticaapp.ui.component.RoundedIconWrapperMini
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Grey02
 import com.example.chatterboticaapp.ui.theme.Grey03
@@ -31,6 +33,7 @@ import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple02
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
 import com.example.chatterboticaapp.ui.viewmodel.DocsViewModel
+import com.example.chatterboticaapp.utils.PDFUtils
 import com.example.chatterboticaapp.utils.PDFUtils.getPdfFiles
 import com.example.chatterboticaapp.utils.PDFUtils.openPdfFile
 import com.itextpdf.kernel.pdf.PdfDocument
@@ -45,7 +48,6 @@ fun DocsScreen() {
     val docsViewModel: DocsViewModel = hiltViewModel()
 
     // Use mutableStateListOf to hold and observe the list of PDF files
-    val pdfFileSize by docsViewModel.fileSize.collectAsState()
     // if you r using flow
     val pdfFiles by docsViewModel.pdfFiles.collectAsState()
     // if you r using live data
@@ -81,7 +83,7 @@ fun DocsScreen() {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(pdfFiles.reversed()) { file ->
-                    PdfFileItem(file, context)
+                    PdfFileItem(file = file, onClickItem = {docsViewModel.openPdfFile(context, file)}, onDeleteClick = {docsViewModel.deletePdfFile(context, file)})
                 }
             }
         } else {
@@ -103,13 +105,12 @@ fun DocsScreen() {
 
 // Composable function to display each PDF file item
 @Composable
-fun PdfFileItem(file: File, context: Context) {
-
+fun PdfFileItem(file: File, onDeleteClick: (File) -> Unit, onClickItem: ()->Unit) {
     Surface(
         modifier = Modifier
             .fillMaxWidth()
             .clickable {
-                openPdfFile(context, file)
+                onClickItem()
             },
         color = Grey04,
         shape = RoundedCornerShape(8.dp), // Rounded corners
@@ -118,14 +119,17 @@ fun PdfFileItem(file: File, context: Context) {
         Row(
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(12.dp) // Padding inside the Surface
+                .padding(10.dp) // Padding inside the Surface
+            ,
+            verticalAlignment = Alignment.CenterVertically
         ) {
             Icon(
                 painter = painterResource(id = R.drawable.baseline_picture_as_pdf_24), // Ensure you have this resource
                 contentDescription = "PDF Icon",
                 modifier = Modifier
                     .size(24.dp)
-                    .padding(end = 8.dp),
+                    .weight(0.15f)
+                ,
                 tint = Color.White
             )
 
@@ -133,12 +137,21 @@ fun PdfFileItem(file: File, context: Context) {
                 text = file.name,
                 style = TextStyle(
                     color = Color.White,
-                    fontSize = 13.sp,
+                    fontSize = 14.sp,
                 ),
                 modifier = Modifier
                     .weight(1f)
                     .padding(top = 5.dp, bottom = 5.dp)
             )
+
+            Box(
+                modifier = Modifier
+                    .clickable {
+                        onDeleteClick(file)
+                    }
+            ) {
+                RoundedIconWrapperMini(drawableIcon = R.drawable.baseline_delete_24, colorWrapper = Grey03)
+            }
         }
     }
 }

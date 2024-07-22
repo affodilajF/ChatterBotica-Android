@@ -9,7 +9,7 @@ import androidx.room.PrimaryKey
 data class SessionChats(
     @PrimaryKey(autoGenerate = true) val id: Long = 0,
     @ColumnInfo(name="title") val title: String,
-    @ColumnInfo(name="timestamp") val timestamp: String,
+    @ColumnInfo(name = "timestamp") val timestamp: Long,
     @ColumnInfo(name = "chatsJson") val chatsJson: String
 )
 

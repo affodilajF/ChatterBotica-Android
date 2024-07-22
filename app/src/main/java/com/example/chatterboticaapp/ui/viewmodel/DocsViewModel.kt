@@ -10,6 +10,7 @@ import java.io.File
 import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import com.example.chatterboticaapp.utils.PDFUtils
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -22,9 +23,6 @@ class DocsViewModel @Inject constructor() : ViewModel() {
     private val _pdfFiles = MutableStateFlow<List<File>>(emptyList())
     val pdfFiles: StateFlow<List<File>> get() = _pdfFiles
 
-    // State for holding the count of files
-    private val _fileSize = MutableStateFlow(_pdfFiles.value.size)
-    val fileSize: StateFlow<Int> get() = _fileSize
 
     // Method to load PDF files asynchronously
     fun loadPdfFiles(ctx : Context) {
@@ -32,6 +30,19 @@ class DocsViewModel @Inject constructor() : ViewModel() {
             val files = getPdfFiles(ctx) // Implement this function as needed
             _pdfFiles.value = files
         }
+    }
+
+    fun deletePdfFile(context: Context, file: File) {
+        viewModelScope.launch {
+            val deleted = PDFUtils.deletePdfFile(context, file)
+            if (deleted) {
+                loadPdfFiles(context)
+            }
+        }
+    }
+
+    fun openPdfFile(context: Context, file: File){
+        PDFUtils.openPdfFile(context, file)
     }
 
 

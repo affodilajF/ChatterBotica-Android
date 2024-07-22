@@ -1,6 +1,7 @@
 package com.example.chatterboticaapp.ui.screen
 
 import android.Manifest.permission.RECORD_AUDIO
+import android.util.Log
 import androidx.activity.OnBackPressedCallback
 import androidx.activity.OnBackPressedDispatcher
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
@@ -21,7 +22,16 @@ import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
 import androidx.compose.foundation.lazy.rememberLazyListState
 import androidx.compose.foundation.shape.CircleShape
+import androidx.compose.material.icons.Icons
+import androidx.compose.material.icons.filled.Image
 import androidx.compose.material3.AlertDialog
+import androidx.compose.material3.ExtendedFloatingActionButton
+import androidx.compose.material3.Icon
+import androidx.compose.material3.Scaffold
+import androidx.compose.material3.SnackbarDuration
+import androidx.compose.material3.SnackbarHost
+import androidx.compose.material3.SnackbarHostState
+import androidx.compose.material3.SnackbarResult
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.DisposableEffect
@@ -30,8 +40,10 @@ import androidx.compose.runtime.State
 import androidx.compose.runtime.collectAsState
 import androidx.compose.runtime.getValue
 import androidx.compose.runtime.livedata.observeAsState
+import androidx.compose.runtime.mutableIntStateOf
 import androidx.compose.runtime.mutableStateOf
 import androidx.compose.runtime.remember
+import androidx.compose.runtime.rememberCoroutineScope
 import androidx.compose.runtime.rememberUpdatedState
 import androidx.compose.runtime.setValue
 import androidx.compose.ui.Modifier
@@ -57,15 +69,23 @@ import com.example.chatterboticaapp.ui.component.TextMessageRequest
 import com.example.chatterboticaapp.ui.component.TextMessageResponse
 import com.example.chatterboticaapp.ui.theme.Green02
 import com.example.chatterboticaapp.ui.viewmodel.ChatViewModel
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.coroutineScope
+import kotlinx.coroutines.launch
 
 @Composable
 fun ChatScreen(navController: NavController, sessionChatId: Long) {
+
+    val scope = rememberCoroutineScope()
+    val snackbarHostState = remember { SnackbarHostState() }
 
     var text by remember { mutableStateOf("") }
     var query by remember { mutableStateOf("") }
     var isExit by remember { mutableStateOf(false) }
     var isGeneratePdfClicked by remember { mutableStateOf(false) }
     var pdfFileName by remember { mutableStateOf("") }
+    var micIcon by remember { mutableIntStateOf(R.drawable.baseline_mic_off_24) }
 
     val chatViewModel: ChatViewModel = hiltViewModel()
     val itemListState by chatViewModel.allChat.observeAsState(initial = emptyList())
@@ -75,6 +95,7 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
     val isFetching = chatViewModel.isFetching.value
 
     val voiceToTextState by chatViewModel.state.collectAsState()
+    val pdfFile by chatViewModel.pdfFile.collectAsState()
 
     val context = LocalContext.current
 
@@ -101,11 +122,14 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
         }
     }
 
-
     // Add session chats when exiting the screen
     LaunchedEffect(isExit) {
         if(isExit){
-            chatViewModel.insertSessionChatDb()
+            if(sessionChatId>0){
+                chatViewModel.updateSessionChatDb()
+            } else {
+                chatViewModel.insertSessionChatDb()
+            }
             isExit = false
         }
     }
@@ -113,16 +137,16 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
     // For history utility
     LaunchedEffect(Unit) {
         if(sessionChatId > 0){
-            chatViewModel.setHistorySessionChat(sessionChatId)
+            chatViewModel.setHistorySessionChat()
         }
     }
 
     // Handle exit
     DisposableEffect(Unit) {
+        chatViewModel.setIdSessionChat(sessionChatId)
         onDispose {
             chatViewModel.setIsFetching(false)
             isExit = true
-            chatViewModel.clearChats()
             chatViewModel.clearSpokenText()
         }
     }
@@ -139,6 +163,9 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
 
     if(chatViewModel.canRecord.value && voiceToTextState.isSpeaking){
         SpeechTextDialog()
+        micIcon = R.drawable.baseline_mic_on_24
+    } else {
+        micIcon = R.drawable.baseline_mic_off_24
     }
 
     if(isGeneratePdfClicked){
@@ -158,63 +185,98 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
         }
     }
 
-    Column(
-        modifier = Modifier
-            .fillMaxSize()
-            .background(color = Color.Black)
-            .padding(top = 18.dp)
-    ) {
-        Box(
-            modifier = Modifier
-                .weight(1f)
-                .padding(horizontal = 20.dp)
-        ) {
-            LazyColumn(
-                state = lazyListState,
-                modifier = Modifier.fillMaxSize()
-            ) {
-                items(itemListState, key = { item -> item.id }) { item ->
-                    TextMessageRequest(username = "You", text = item.request)
-                    var isResponseReady by remember { mutableStateOf(false) }
-                    LaunchedEffect(item.response) {
-                        isResponseReady = item.response != ""
+    LaunchedEffect(pdfFile) {
+        if(pdfFile != null){
+            val result = snackbarHostState
+                .showSnackbar(
+                    message = "File already generated",
+                    actionLabel = "Open",
+                    duration = SnackbarDuration.Short
+                )
+            when (result) {
+                SnackbarResult.ActionPerformed -> {
+                    /* Handle snackbar action performed */
+                    chatViewModel.openPdfFile(context)
+                    if(sessionChatId>0){
+                        chatViewModel.updateSessionChatDb()
+                    }else{
+                        chatViewModel.insertSessionChatDb()
                     }
-                    if(isResponseReady){
-                        TextMessageResponse(username = "Botica", text= item.response)
-                    } else {
-                        TextMessageResponse(username = "Botica", "...")
-                    }
+                }
+                SnackbarResult.Dismissed -> {
+                    /* Handle snackbar dismissed */
                 }
             }
         }
-        Box(
+    }
+
+    Scaffold(
+        snackbarHost = {
+            SnackbarHost(hostState = snackbarHostState)
+        },
+    ) { contentPadding ->
+        Column(
             modifier = Modifier
-                .fillMaxWidth()
-                .padding(top = 4.dp)
+                .fillMaxSize()
+                .background(color = Color.Black)
+                .padding(top = 18.dp)
         ) {
-            ChatMenuUtility(
-                isFetchingParam = isFetching,
-                text = text,
-                onTextChange = { newText -> text = newText },
-                onClickSend = {
-                    chatViewModel.setIsFetching(true)
-                    query = text
-                    text = ""
-                },
-                onClickMic = {
-                    if(chatViewModel.canRecord.value){
-                        chatViewModel.startListening("")
-                    }else{
-                        // launch permission request dialog
-                        recordAudioLauncher.launch(RECORD_AUDIO)
+            Box(
+                modifier = Modifier
+                    .weight(1f)
+                    .padding(horizontal = 20.dp)
+            ) {
+                LazyColumn(
+                    state = lazyListState,
+                    modifier = Modifier.fillMaxSize()
+                ) {
+                    items(itemListState, key = { item -> item.id }) { item ->
+                        TextMessageRequest(username = "You", text = item.request)
+                        var isResponseReady by remember { mutableStateOf(false) }
+                        LaunchedEffect(item.response) {
+                            isResponseReady = item.response != ""
+                        }
+                        if (isResponseReady) {
+                            TextMessageResponse(username = "Botica", text = item.response)
+                        } else {
+                            TextMessageResponse(username = "Botica", "...")
+                        }
                     }
-                },
-                onClickPdf = {
-                    isGeneratePdfClicked = true
                 }
-            )
+            }
+            Box(
+                modifier = Modifier
+                    .fillMaxWidth()
+                    .padding(top = 4.dp)
+            ) {
+                ChatMenuUtility(
+                    micIcon = micIcon,
+                    isFetchingParam = isFetching,
+                    text = text,
+                    onTextChange = { newText -> text = newText },
+                    onClickSend = {
+                        chatViewModel.setIsFetching(true)
+                        query = text
+                        text = ""
+                    },
+                    onClickMic = {
+                        if (chatViewModel.canRecord.value) {
+                            chatViewModel.startListening("")
+                        } else {
+                            // launch permission request dialog
+                            recordAudioLauncher.launch(RECORD_AUDIO)
+                        }
+                    },
+                    onClickPdf = {
+                        isGeneratePdfClicked = true
+                        Log.d("Cek", contentPadding.toString())
+                    }
+                )
+            }
         }
     }
+
+
 }
 
 @Preview

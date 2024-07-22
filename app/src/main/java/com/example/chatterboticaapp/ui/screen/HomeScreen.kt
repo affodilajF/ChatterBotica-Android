@@ -97,7 +97,7 @@ fun HomeScreen(navController: NavController){
                 modifier = Modifier.weight(2f),
                 state = lazyListState
             ) {
-                items(itemChatsHistoryState.reversed(), key = { history -> history.id }) { history ->
+                items(itemChatsHistoryState, key = { history -> history.id }) { history ->
                     HistoryBox(history){
                         val id: Long = history.id
                         navController.navigate(route = Routes.CHAT_SCREEN + "/$id")

@@ -6,6 +6,7 @@ import androidx.room.Dao
 import androidx.room.Delete
 import androidx.room.Insert
 import androidx.room.Query
+import androidx.room.Update
 import com.example.chatterboticaapp.data.model.local.SessionChats
 import kotlinx.coroutines.flow.Flow
 
@@ -13,13 +14,12 @@ import kotlinx.coroutines.flow.Flow
 interface SessionChatsDAO {
     @Insert
     suspend fun insert(data: SessionChats)
-
-    @Query("SELECT * FROM SessionChats")
+    @Update
+    suspend fun update(data: SessionChats)
+    @Query("SELECT * FROM SessionChats ORDER BY timestamp DESC")
     fun getSessionChats(): Flow<List<SessionChats>>
-
     @Query("SELECT * FROM sessionChats WHERE id=:id")
     suspend fun getSessionChatById(id: Long): SessionChats?
-
     @Delete
     suspend fun delete(data: SessionChats)
 }

@@ -129,7 +129,7 @@ fun HistoryBox(history : SessionChats, onClick: () -> Unit){
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
-                    text = TimestampUtils.convertStringToTimestamp(history.timestamp),
+                    text = TimestampUtils.getDuration(history.timestamp),
                     style = TextStyle(fontSize = 8.sp, color = Color.White),
                 )
 

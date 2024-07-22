@@ -23,4 +23,8 @@ class SessionChatsRepository @Inject constructor(private val sessionChatsDao : S
     suspend fun insertSessionChat(data: SessionChats){
         sessionChatsDao.insert(data)
     }
+
+    suspend fun updateSessionChat(data: SessionChats){
+        sessionChatsDao.update(data)
+    }
 }
