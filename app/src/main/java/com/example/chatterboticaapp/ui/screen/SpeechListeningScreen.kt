@@ -1,6 +1,7 @@
 package com.example.chatterboticaapp.ui.screen
 import android.Manifest
 import android.util.Log
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.activity.compose.rememberLauncherForActivityResult
 import androidx.activity.result.contract.ActivityResultContracts
 import androidx.compose.animation.core.RepeatMode
@@ -48,6 +49,7 @@ import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.data.model.local.VoiceToTextParserState
 import com.example.chatterboticaapp.ui.component.IconTextButton
@@ -67,7 +69,14 @@ fun SpeechListeningPreview(){
 }
 
 @Composable
-fun SpeechListeningScreen(){
+fun SpeechListeningScreen(navController: NavController){
+
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    if (backDispatcher != null) {
+        BackHandler(onBack = {
+            navController.popBackStack(navController.graph.startDestinationId, false)
+        }, backDispatcher = backDispatcher)
+    }
 
     val ttsViewModel : TTSViewModel = hiltViewModel()
     val sttViewModel: STTViewModel = hiltViewModel()

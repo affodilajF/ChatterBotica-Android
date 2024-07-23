@@ -11,6 +11,7 @@ import android.content.Context
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.example.chatterboticaapp.utils.PDFUtils
+import kotlinx.coroutines.delay
 import kotlinx.coroutines.flow.MutableStateFlow
 import kotlinx.coroutines.flow.StateFlow
 import javax.inject.Inject
@@ -34,6 +35,7 @@ class DocsViewModel @Inject constructor() : ViewModel() {
                 val files = getPdfFiles(ctx) // Implement this function as needed
                 _pdfFiles.value = files
             } finally {
+                delay(400)
                 _isLoading.value = false
             }
         }

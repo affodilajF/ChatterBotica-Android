@@ -43,12 +43,11 @@ fun AppNavigationGraph(navController: NavHostController){
                     stiffness = Spring.StiffnessMediumLow
                 ), targetAlpha = 0f ) } ,
         navController = navController, startDestination = Routes.HOMES_SCREEN){
-//        NavHost(navController = navController, startDestination = Routes.HOMES_SCREEN){
             composable(Routes.HOMES_SCREEN){
                 HomeScreen(navController)
             }
             composable(Routes.SPEECH_LISTENING_SCREEN){
-                SpeechListeningScreen()
+                SpeechListeningScreen(navController)
             }
             composable(
                 route = "${Routes.CHAT_SCREEN}/{sessionChatId}",
@@ -59,7 +58,7 @@ fun AppNavigationGraph(navController: NavHostController){
                 ChatScreen(navController = navController, sessionChatId = sessionChatId)
             }
             composable(Routes.DOCS_SCREEN){
-                DocsScreen()
+                DocsScreen(navController)
             }
 
         }

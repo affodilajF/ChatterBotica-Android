@@ -3,6 +3,7 @@ package com.example.chatterboticaapp.ui.screen
 import android.content.Context
 import android.content.Intent
 import android.widget.Toast
+import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -23,6 +24,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.core.content.FileProvider
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.navigation.NavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.RoundedIconWrapperMini
 import com.example.chatterboticaapp.ui.theme.Black01
@@ -43,7 +45,15 @@ import com.itextpdf.layout.element.Paragraph
 import java.io.File
 
 @Composable
-fun DocsScreen() {
+fun DocsScreen(navController: NavController) {
+
+    val backDispatcher = LocalOnBackPressedDispatcherOwner.current?.onBackPressedDispatcher
+    if (backDispatcher != null) {
+        BackHandler(onBack = {
+            navController.popBackStack(navController.graph.startDestinationId, false)
+        }, backDispatcher = backDispatcher)
+    }
+
     val context = LocalContext.current
     val docsViewModel: DocsViewModel = hiltViewModel()
 

@@ -131,8 +131,7 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
     LocalOnBackPressedDispatcherOwner.current?.let {
         BackHandler(backDispatcher = it.onBackPressedDispatcher) {
             isExit = true
-            navController.popBackStack()
-            navController.navigate(Routes.HOMES_SCREEN)
+            navController.popBackStack(navController.graph.startDestinationId, false)
         }
     }
 
