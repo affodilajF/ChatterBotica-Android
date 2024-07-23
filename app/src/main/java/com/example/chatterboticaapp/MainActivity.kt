@@ -107,12 +107,40 @@ class MainActivity : ComponentActivity() {
 //                                                            launchSingleTop = true
 //                                                            restoreState = true
 //                                                        }
-                                                        when(index){
-                                                            0 -> {navController.navigate(Routes.HOMES_SCREEN)}
-                                                            1 -> {navController.navigate(Routes.CHAT_SCREEN+"/0") }
-                                                            2-> {navController.navigate(Routes.SPEECH_LISTENING_SCREEN)}
-                                                            3-> {navController.navigate(Routes.DOCS_SCREEN)}
+//                                                        when(index){
+//                                                            0 -> {navController.navigate(Routes.HOMES_SCREEN)}
+//                                                            1 -> {navController.navigate(Routes.CHAT_SCREEN+"/0") }
+//                                                            2-> {navController.navigate(Routes.SPEECH_LISTENING_SCREEN)}
+//                                                            3-> {navController.navigate(Routes.DOCS_SCREEN)}
+//                                                        }
+                                                        when (index) {
+                                                            0 -> {
+                                                                navController.navigate(Routes.HOMES_SCREEN) {
+                                                                    // Clear all screens up to the start destination (optional)
+                                                                    // This will clear the back stack to only contain the new destination
+                                                                    popUpTo(Routes.HOMES_SCREEN) { inclusive = false }
+                                                                }
+                                                            }
+                                                            1 -> {
+                                                                navController.navigate(Routes.CHAT_SCREEN + "/0") {
+                                                                    // Clear screens up to a certain point in the back stack
+                                                                    popUpTo(Routes.CHAT_SCREEN) { inclusive = false }
+                                                                }
+                                                            }
+                                                            2 -> {
+                                                                navController.navigate(Routes.SPEECH_LISTENING_SCREEN) {
+                                                                    // Clear all screens up to the start destination (optional)
+                                                                    popUpTo(Routes.SPEECH_LISTENING_SCREEN) { inclusive = false }
+                                                                }
+                                                            }
+                                                            3 -> {
+                                                                navController.navigate(Routes.DOCS_SCREEN) {
+                                                                    // Clear screens up to a certain point in the back stack
+                                                                    popUpTo(Routes.DOCS_SCREEN) { inclusive = false }
+                                                                }
+                                                            }
                                                         }
+
                                                     },
                                                     colors = NavigationBarItemDefaults
                                                         .colors(

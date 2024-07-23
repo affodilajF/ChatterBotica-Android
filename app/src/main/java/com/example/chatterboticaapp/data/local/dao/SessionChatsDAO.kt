@@ -22,4 +22,7 @@ interface SessionChatsDAO {
     suspend fun getSessionChatById(id: Long): SessionChats?
     @Delete
     suspend fun delete(data: SessionChats)
+
+    @Query("DELETE FROM SessionChats")
+    suspend fun deleteAll()
 }

@@ -53,6 +53,8 @@ fun DocsScreen() {
     // if you r using live data
 //    val pdfFiles by docsViewModel.pdfFiles.observeAsState(emptyList())
 
+    val isLoadingState by docsViewModel.isLoading.collectAsState()
+
     LaunchedEffect(Unit) {
         docsViewModel.loadPdfFiles(context)
     }
@@ -77,7 +79,14 @@ fun DocsScreen() {
                 .padding(vertical = 20.dp) // Optional: Makes the Text fill the width of the parent
         )
 
-        if(pdfFiles.isNotEmpty()){
+        if(isLoadingState){
+            Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
+                Text("Loading ... ")
+                CircularProgressIndicator()
+            }
+        }
+
+        if(pdfFiles.isNotEmpty() && !isLoadingState){
             LazyColumn(
                 modifier = Modifier.fillMaxSize(),
                 verticalArrangement = Arrangement.spacedBy(8.dp)
@@ -86,9 +95,8 @@ fun DocsScreen() {
                     PdfFileItem(file = file, onClickItem = {docsViewModel.openPdfFile(context, file)}, onDeleteClick = {docsViewModel.deletePdfFile(context, file)})
                 }
             }
-        } else {
+        } else if(pdfFiles.isEmpty() && !isLoadingState){
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-
                 Text(
                     text = "No data found",
                     style = TextStyle(

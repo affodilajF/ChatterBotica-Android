@@ -12,9 +12,8 @@ class SessionChatsRepository @Inject constructor(private val sessionChatsDao : S
     suspend fun deleteSessionChat(data: SessionChats){
         sessionChatsDao.delete(data)
     }
-    fun getSessionChats() : Flow<List<SessionChats>> {
+    fun getSessionChats() : Flow<List<SessionChats>>{
         return sessionChatsDao.getSessionChats()
-
     }
     suspend fun getSessionChatById(id:Long) : SessionChats? {
         return sessionChatsDao.getSessionChatById(id)
@@ -26,5 +25,9 @@ class SessionChatsRepository @Inject constructor(private val sessionChatsDao : S
 
     suspend fun updateSessionChat(data: SessionChats){
         sessionChatsDao.update(data)
+    }
+
+    suspend fun deleteAll(){
+        sessionChatsDao.deleteAll()
     }
 }

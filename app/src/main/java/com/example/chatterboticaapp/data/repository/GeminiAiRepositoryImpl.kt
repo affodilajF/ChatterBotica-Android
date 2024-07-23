@@ -9,6 +9,7 @@ class GeminiAiRepositoryImpl() : GeminiAiRepository {
 
     private val generativeModel = GenerativeModel(
         modelName = "gemini-pro",
+
     )
 
     override suspend fun getResponse(query: String): GeminiAiResponse {

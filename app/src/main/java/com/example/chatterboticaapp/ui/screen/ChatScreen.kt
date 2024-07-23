@@ -67,6 +67,7 @@ import com.example.chatterboticaapp.ui.component.GeneratePdfDialog
 import com.example.chatterboticaapp.ui.component.SpeechTextDialog
 import com.example.chatterboticaapp.ui.component.TextMessageRequest
 import com.example.chatterboticaapp.ui.component.TextMessageResponse
+import com.example.chatterboticaapp.ui.navigation.Routes
 import com.example.chatterboticaapp.ui.theme.Green02
 import com.example.chatterboticaapp.ui.viewmodel.ChatViewModel
 import kotlinx.coroutines.CoroutineScope
@@ -104,6 +105,7 @@ fun ChatScreen(navController: NavController, sessionChatId: Long) {
         BackHandler(backDispatcher = it.onBackPressedDispatcher) {
             isExit = true
             navController.popBackStack()
+            navController.navigate(Routes.HOMES_SCREEN)
         }
     }
 

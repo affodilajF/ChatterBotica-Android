@@ -1,5 +1,12 @@
 package com.example.chatterboticaapp.ui.component
 
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.animation.core.Spring
+import androidx.compose.animation.core.animateFloatAsState
+import androidx.compose.animation.core.spring
+import androidx.compose.animation.core.tween
+import androidx.compose.animation.fadeIn
+import androidx.compose.animation.slideIn
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.Arrangement
@@ -17,14 +24,20 @@ import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
+import androidx.compose.runtime.getValue
+import androidx.compose.runtime.mutableStateOf
+import androidx.compose.runtime.remember
+import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
+import androidx.compose.ui.graphics.graphicsLayer
 import androidx.compose.ui.text.SpanStyle
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.buildAnnotatedString
 import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.text.withStyle
+import androidx.compose.ui.unit.IntOffset
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
@@ -109,6 +122,27 @@ fun BigBox(onClick: () -> Unit){
 
 @Composable
 fun HistoryBox(history : SessionChats, onClick: () -> Unit){
+
+    val fadeInTransition = remember {
+        fadeIn(
+            animationSpec = spring(
+                stiffness = Spring.StiffnessHigh
+            ),
+            initialAlpha = 0.5f // Fully transparent
+        )
+    }
+
+    val slideInTransition = remember {
+        slideIn(
+            initialOffset = { fullSize ->
+                IntOffset(fullSize.width, 0) // Slide in from the right
+            },
+            animationSpec = tween(durationMillis = 1000) // Customize duration
+        )
+    }
+    AnimatedVisibility(visible = true, enter = slideInTransition) {
+        
+
     Box(modifier = Modifier
         .fillMaxWidth()
         .clickable {
@@ -136,5 +170,6 @@ fun HistoryBox(history : SessionChats, onClick: () -> Unit){
             }
             RoundedIconWrapperMini(drawableIcon = R.drawable.baseline_arrow_forward_24, colorWrapper = Grey00)
         }
+    }
     }
 }

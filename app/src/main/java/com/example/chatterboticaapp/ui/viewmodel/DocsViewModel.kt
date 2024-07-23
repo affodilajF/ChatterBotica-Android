@@ -23,12 +23,19 @@ class DocsViewModel @Inject constructor() : ViewModel() {
     private val _pdfFiles = MutableStateFlow<List<File>>(emptyList())
     val pdfFiles: StateFlow<List<File>> get() = _pdfFiles
 
+    private val _isLoading = MutableStateFlow<Boolean>(true)
+    val isLoading: StateFlow<Boolean> get() = _isLoading
+
 
     // Method to load PDF files asynchronously
     fun loadPdfFiles(ctx : Context) {
         viewModelScope.launch {
-            val files = getPdfFiles(ctx) // Implement this function as needed
-            _pdfFiles.value = files
+            try {
+                val files = getPdfFiles(ctx) // Implement this function as needed
+                _pdfFiles.value = files
+            } finally {
+                _isLoading.value = false
+            }
         }
     }
 
