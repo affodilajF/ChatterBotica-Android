@@ -54,7 +54,9 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.lifecycle.LifecycleObserver
+import androidx.lifecycle.OnLifecycleEvent
 import androidx.navigation.NavController
 import androidx.navigation.compose.currentBackStackEntryAsState
 import com.example.chatterboticaapp.R
@@ -75,6 +77,30 @@ import kotlinx.coroutines.delay
 
 @Composable
 fun HomeScreen(navController: NavController){
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycle = lifecycleOwner.lifecycle
+
+    // Use a DisposableEffect to add and remove the observer
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_CREATE -> Log.d("HOMESCREEN LifecycleAware", "ON_CREATE HOMESCREEN")
+                Lifecycle.Event.ON_START -> Log.d("HOMESCREEN LifecycleAware", "ON_START HOMESCREEN")
+                Lifecycle.Event.ON_RESUME -> Log.d("HOMESCREEN LifecycleAware", "ON_RESUME HOMESCREEN")
+
+                Lifecycle.Event.ON_PAUSE -> Log.d("HOMESCREEN LifecycleAware", "ON_PAUSE HOMESCREEN")
+                Lifecycle.Event.ON_STOP -> Log.d("HOMESCREEN LifecycleAware", "ON_STOP HOMESCREEN")
+
+                Lifecycle.Event.ON_DESTROY -> Log.d("HOMESCREEN LifecycleAware", "ON_DESTROY HOMESCREEN")
+                Lifecycle.Event.ON_ANY -> TODO()
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
 
     val homeViewModel: HomeViewModel = hiltViewModel()
     val lazyListState = rememberLazyListState()

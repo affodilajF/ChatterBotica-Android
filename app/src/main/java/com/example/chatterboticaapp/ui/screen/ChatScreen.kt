@@ -51,6 +51,7 @@ import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.platform.LocalDensity
+import androidx.compose.ui.platform.LocalLifecycleOwner
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.text.font.FontWeight
@@ -60,6 +61,8 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.compose.ui.window.Dialog
 import androidx.hilt.navigation.compose.hiltViewModel
+import androidx.lifecycle.Lifecycle
+import androidx.lifecycle.LifecycleEventObserver
 import androidx.navigation.NavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.ChatMenuUtility
@@ -77,6 +80,30 @@ import kotlinx.coroutines.launch
 
 @Composable
 fun ChatScreen(navController: NavController, sessionChatId: Long) {
+
+    val lifecycleOwner = LocalLifecycleOwner.current
+    val lifecycle = lifecycleOwner.lifecycle
+
+    // Use a DisposableEffect to add and remove the observer
+    DisposableEffect(lifecycle) {
+        val observer = LifecycleEventObserver { _, event ->
+            when (event) {
+                Lifecycle.Event.ON_CREATE -> Log.d("CHATSCREEN LifecycleAware", "ON_CREATE CHATSCREEN")
+                Lifecycle.Event.ON_START -> Log.d("CHATSCREEN LifecycleAware", "ON_START CHATSCREEN")
+                Lifecycle.Event.ON_RESUME -> Log.d("CHATSCREEN LifecycleAware", "ON_RESUME CHATSCREEN")
+
+                Lifecycle.Event.ON_PAUSE -> Log.d("CHATSCREEN LifecycleAware", "ON_PAUSE CHATSCREEN")
+                Lifecycle.Event.ON_STOP -> Log.d("CHATSCREEN LifecycleAware", "ON_STOP CHATSCREEN")
+
+                Lifecycle.Event.ON_DESTROY -> Log.d("CHATSCREEN LifecycleAware", "ON_DESTROY CHATSCREEN")
+                Lifecycle.Event.ON_ANY -> TODO()
+            }
+        }
+        lifecycle.addObserver(observer)
+        onDispose {
+            lifecycle.removeObserver(observer)
+        }
+    }
 
     val scope = rememberCoroutineScope()
     val snackbarHostState = remember { SnackbarHostState() }
