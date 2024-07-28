@@ -85,7 +85,6 @@ class ChatViewModel @Inject constructor(
             jsonConverter.fromJson(sessionChats.chatsJson).values.toList().also {
                 _allChat.value = it
             }
-//            sessionChatsRepository.deleteSessionChat(sessionChats)
         }
     }
 
@@ -128,7 +127,9 @@ class ChatViewModel @Inject constructor(
 
     suspend fun updateSessionChatDb() {
         _allChat.value?.takeIf { it.isNotEmpty() }?.let {
-            sessionChatsRepository.updateSessionChat(convertChatSession())
+            val converted = convertChatSession()
+            if (converted.chatsJson.length != sessionChatsRepository.getSessionChatById(converted.id)?.chatsJson?.length)
+                sessionChatsRepository.updateSessionChat(converted)
         }
     }
 
@@ -151,10 +152,9 @@ class ChatViewModel @Inject constructor(
     }
 
 
-    // speech to text
+    // STT
     val state = voiceToTextParser.state
     var canRecord: MutableState<Boolean> = mutableStateOf(false)
-
 
     fun startListening(existedText : String){
         voiceToTextParser.startListening(existedText = existedText)

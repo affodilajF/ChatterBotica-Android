@@ -14,21 +14,15 @@ import androidx.compose.material3.Surface
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
 import androidx.compose.runtime.getValue
-import androidx.compose.runtime.mutableStateOf
-import androidx.compose.runtime.remember
 import androidx.compose.runtime.rememberUpdatedState
-import androidx.compose.runtime.setValue
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
-import androidx.compose.ui.text.TextStyle
 import androidx.compose.ui.unit.dp
-import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
-import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
 
 
 @Composable

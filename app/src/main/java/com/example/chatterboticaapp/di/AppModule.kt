@@ -14,8 +14,6 @@ import com.example.chatterboticaapp.domain.repository.SessionChatsRepository
 import com.example.chatterboticaapp.domain.repository.GeminiAiRepository
 import com.example.chatterboticaapp.domain.repository.OpenAIApiRepository
 import com.example.chatterboticaapp.domain.repository.PlayHTRepository
-import com.example.chatterboticaapp.ui.viewmodel.STTViewModel
-import com.example.chatterboticaapp.ui.viewmodel.TTSViewModel
 import com.example.chatterboticaapp.utils.VoiceToTextParser
 import com.google.gson.GsonBuilder
 import dagger.Module
@@ -126,17 +124,17 @@ object AppModule {
         return VoiceToTextParser(appContext)
     }
 
-    @Provides
-    @Singleton
-    fun provideSpeechListeningViewModel(voiceToTextParser: VoiceToTextParser): STTViewModel {
-        return STTViewModel(voiceToTextParser)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideSpeechListeningViewModel(voiceToTextParser: VoiceToTextParser): STTViewModel {
+//        return STTViewModel(voiceToTextParser)
+//    }
 
-    @Provides
-    @Singleton
-    fun provideTTSViewModel(appContext: Application, playHTRepository: PlayHTRepository): TTSViewModel {
-        return TTSViewModel(playHTRepository)
-    }
+//    @Provides
+//    @Singleton
+//    fun provideTTSViewModel(appContext: Application, playHTRepository: PlayHTRepository): TTSViewModel {
+//        return TTSViewModel(playHTRepository)
+//    }
 
 
 }

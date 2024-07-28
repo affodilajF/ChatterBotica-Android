@@ -1,12 +1,16 @@
 package com.example.chatterboticaapp.ui.viewmodel
 
-import android.content.Context
 import android.media.AudioAttributes
 import android.media.MediaPlayer
 import android.util.Log
+import androidx.compose.runtime.MutableState
+import androidx.compose.runtime.mutableStateOf
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.example.chatterboticaapp.data.model.remote.GeminiAiResponse
+import com.example.chatterboticaapp.domain.repository.GeminiAiRepository
 import com.example.chatterboticaapp.domain.repository.PlayHTRepository
+import com.example.chatterboticaapp.utils.VoiceToTextParser
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.async
 import kotlinx.coroutines.delay
@@ -16,9 +20,15 @@ import kotlinx.coroutines.launch
 import javax.inject.Inject
 
 
-@HiltViewModel
-class TTSViewModel @Inject constructor(private val repository: PlayHTRepository) : ViewModel() {
 
+@HiltViewModel
+class SpeechListeningViewModel @Inject constructor(
+    private val repository: PlayHTRepository,
+    private val voiceToTextParser: VoiceToTextParser,
+    private val geminiRepository: GeminiAiRepository
+): ViewModel() {
+
+    // TTS ------------------
     private var mediaPlayer: MediaPlayer? = null
     private var _isMediaPlaying = MutableStateFlow(false) // State Flow untuk status pemutaran audio
     val isMediaPlayingState: StateFlow<Boolean> = _isMediaPlaying // Properti yang dapat diamati untuk status pemutaran audio
@@ -52,7 +62,7 @@ class TTSViewModel @Inject constructor(private val repository: PlayHTRepository)
         }
     }
 
-    fun playAudio(audioUrl: String) {
+    private fun playAudio(audioUrl: String) {
         releaseMediaPlayer()
 
         mediaPlayer = MediaPlayer().apply {
@@ -66,7 +76,7 @@ class TTSViewModel @Inject constructor(private val repository: PlayHTRepository)
             prepareAsync()
             setOnPreparedListener {
                 // Panggil start() setelah persiapan selesai
-//                _isPlayHTFetching.value = false
+                // _isPlayHTFetching.value = false
                 it.start()
                 _isPlayHTFetching.value = false
                 _isMediaPlaying.value = true // Set nilai state flow menjadi true ketika audio dimulai
@@ -95,4 +105,46 @@ class TTSViewModel @Inject constructor(private val repository: PlayHTRepository)
         mediaPlayer = null
         _isMediaPlaying.value = false // Set nilai state flow menjadi false saat media player dibebaskan
     }
+
+
+    // SST ---------
+    val state = voiceToTextParser.state
+    var canRecord: MutableState<Boolean> = mutableStateOf(false)
+
+    fun stopListening(){
+        voiceToTextParser.stopListening()
+    }
+
+    fun startListening(existedText : String){
+        voiceToTextParser.startListening(existedText = existedText)
+    }
+
+    fun clearSpokenText(){
+        voiceToTextParser.clearSpokenText()
+    }
+
+    // GEMINI AI
+    private val _responseRequestPeriodic: MutableList<GeminiAiResponse> = mutableListOf()
+
+    val responseRequestPeriodic: List<GeminiAiResponse>
+        get() = _responseRequestPeriodic.toList()
+
+    private fun addResponseRequestPeriodic(param: GeminiAiResponse) {
+        _responseRequestPeriodic.add(param)
+    }
+    // invoked when user exit from chatting screen
+    // invoked when user exit from speech listening screen
+    fun clearResponseRequestPeriodic() {
+        _responseRequestPeriodic.clear()
+    }
+
+    fun fetchResponse(query: String, onResponseReceived: (GeminiAiResponse) -> Unit) {
+        viewModelScope.launch {
+            val result = geminiRepository.getResponse("answer in only 10-20 words : $query")
+            addResponseRequestPeriodic(result)
+            onResponseReceived(result) // Panggil callback ketika respons diterima
+        }
+    }
+
+
 }

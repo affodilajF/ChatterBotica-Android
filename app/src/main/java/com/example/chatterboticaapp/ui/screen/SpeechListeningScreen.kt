@@ -59,9 +59,7 @@ import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
-import com.example.chatterboticaapp.ui.viewmodel.GenerativeAIViewModel
-import com.example.chatterboticaapp.ui.viewmodel.STTViewModel
-import com.example.chatterboticaapp.ui.viewmodel.TTSViewModel
+import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 
 @Preview
 @Composable
@@ -78,25 +76,23 @@ fun SpeechListeningScreen(navController: NavController){
         }, backDispatcher = backDispatcher)
     }
 
-    val ttsViewModel : TTSViewModel = hiltViewModel()
-    val sttViewModel: STTViewModel = hiltViewModel()
-    val generativeAIViewModel: GenerativeAIViewModel = hiltViewModel()
+    val speechListeningViewModel : SpeechListeningViewModel = hiltViewModel()
 
-    val voiceToTextState by sttViewModel.state.collectAsState()
-    val mediaPlayingState by ttsViewModel.isMediaPlayingState.collectAsState()
-    val playHTFetchingState by ttsViewModel.isPlayHTFetchingState.collectAsState()
+    val voiceToTextState by speechListeningViewModel.state.collectAsState()
+    val mediaPlayingState by speechListeningViewModel.isMediaPlayingState.collectAsState()
+    val playHTFetchingState by speechListeningViewModel.isPlayHTFetchingState.collectAsState()
 
 //    ini udah mencakup record perms dan speaking state
-    val isSpeakingAllowed = remember(sttViewModel.canRecord.value, voiceToTextState.isSpeaking) {
-        sttViewModel.canRecord.value && voiceToTextState.isSpeaking
+    val isSpeakingAllowed = remember(speechListeningViewModel.canRecord.value, voiceToTextState.isSpeaking) {
+        speechListeningViewModel.canRecord.value && voiceToTextState.isSpeaking
     }
 
-    RecordPermsLauncher(sttViewModel)
+    RecordPermsLauncher(speechListeningViewModel)
 
     DisposableEffect(Unit) {
         onDispose {
-            sttViewModel.clearSpokenText()
-            sttViewModel.stopListening()
+            speechListeningViewModel.clearSpokenText()
+            speechListeningViewModel.stopListening()
         }
     }
 
@@ -137,7 +133,7 @@ fun SpeechListeningScreen(navController: NavController){
             Box(modifier = Modifier.weight(2f)) {
 
                 if(!mediaPlayingState && !playHTFetchingState){
-                    SpeechListeningIcon(voiceToTextState, sttViewModel, isSpeakingAllowed)
+                    SpeechListeningIcon(voiceToTextState, speechListeningViewModel, isSpeakingAllowed)
                 }
 
 
@@ -149,15 +145,15 @@ fun SpeechListeningScreen(navController: NavController){
                         horizontalArrangement = Arrangement.Center,
                     ){
                         IconTextButton(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
-                            sttViewModel.clearSpokenText()
+                            speechListeningViewModel.clearSpokenText()
                         }
                         Spacer(modifier = Modifier.width(24.dp))
                         IconTextButton(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
 
-                            generativeAIViewModel.fetchResponse(voiceToTextState.spokenText) { result ->
+                            speechListeningViewModel.fetchResponse(voiceToTextState.spokenText) { result ->
                                 Log.d("MyComposable", "Hasil dari generative model yeah: ${result.response}")
-                                ttsViewModel.generateSpeech(result.response)
-                                sttViewModel.clearSpokenText()
+                                speechListeningViewModel.generateSpeech(result.response)
+                                speechListeningViewModel.clearSpokenText()
 
                             }
                         }
@@ -174,7 +170,7 @@ fun SpeechListeningScreen(navController: NavController){
 
 
 @Composable
-fun RecordPermsLauncher(sttViewModel: STTViewModel){
+fun RecordPermsLauncher(sttViewModel: SpeechListeningViewModel){
     val recordAudioLauncher = rememberLauncherForActivityResult(
         contract = ActivityResultContracts.RequestPermission()
     ) { isGranted ->
@@ -232,7 +228,7 @@ fun RobotIconTalking(){
 }
 
 @Composable
-fun SpeechListeningIcon(state: VoiceToTextParserState, sttViewModel: STTViewModel, isSpeakingAllowed: Boolean) {
+fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListeningViewModel, isSpeakingAllowed: Boolean) {
     val infiniteTransitionSpeech = rememberInfiniteTransition(label = "MicIcon")
 
     val iconResId = if (isSpeakingAllowed) R.drawable.baseline_mic_on_24 else R.drawable.baseline_mic_off_24
@@ -265,9 +261,9 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, sttViewModel: STTViewMode
                     .clickable(
                         onClick = {
                             if (state.isSpeaking) {
-                                sttViewModel.stopListening()
+                                viewModel.stopListening()
                             } else {
-                                sttViewModel.startListening(existedText = state.spokenText)
+                                viewModel.startListening(existedText = state.spokenText)
                             }
                         }
                     )
