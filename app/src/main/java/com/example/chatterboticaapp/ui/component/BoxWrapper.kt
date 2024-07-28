@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.data.model.local.SessionChats
+import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey00
 import com.example.chatterboticaapp.ui.theme.Grey04
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
@@ -49,7 +50,7 @@ import com.example.chatterboticaapp.ui.theme.GreyPurple03
 import com.example.chatterboticaapp.utils.TimestampUtils
 
 @Composable
-fun MediumBox(text: String){
+fun MediumBox(text: String, onClick: () -> Unit){
     Surface(modifier = Modifier
         .height(105.dp)
         .width(170.dp),
@@ -59,6 +60,9 @@ fun MediumBox(text: String){
 
         Box(modifier = Modifier
             .padding(8.dp)
+            .clickable(onClick = {
+                onClick()
+            })
             .background(color = GreyPurple03, shape = RoundedCornerShape(10.dp)))
         {
             Column(modifier = Modifier
@@ -114,7 +118,7 @@ fun BigBox(onClick: () -> Unit){
                     },
                     Modifier.weight(1f)
                 )
-                TextButton(onClick)
+                TextButton(onClick, txt = "Let's Talk!", txtColor = GreyPurple01, bgColor = Green01)
             }
         }
     }
@@ -137,11 +141,11 @@ fun HistoryBox(history : SessionChats, onClick: () -> Unit){
             initialOffset = { fullSize ->
                 IntOffset(fullSize.width, 0) // Slide in from the right
             },
-            animationSpec = tween(durationMillis = 1000) // Customize duration
+            animationSpec = tween(durationMillis = 0) // Customize duration
         )
     }
-    AnimatedVisibility(visible = true, enter = slideInTransition) {
-        
+    AnimatedVisibility(visible = true) {
+
 
     Box(modifier = Modifier
         .fillMaxWidth()

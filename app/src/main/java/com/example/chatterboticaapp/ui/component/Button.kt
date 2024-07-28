@@ -7,6 +7,8 @@ import androidx.compose.foundation.layout.Spacer
 import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
+import androidx.compose.material3.Button
+import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.Icon
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
@@ -24,28 +26,49 @@ import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.ui.theme.Green01
 import kotlinx.coroutines.launch
 
-@Composable
-fun TextButton(onClick: () -> Unit){
-    Surface(
-        color = Green01,
-        shape = RoundedCornerShape(8.dp),
-        modifier = Modifier
-            .size(width = 130.dp, height = 40.dp)
-            .clickable(
-                onClick = {
-                    onClick()
-                }
-            ),
+//@Composable
+//fun TextButton(onClick: () -> Unit){
+//    Surface(
+//        color = Green01,
+//        shape = RoundedCornerShape(8.dp),
+//        modifier = Modifier
+//            .size(width = 130.dp, height = 40.dp)
+//            .clickable(
+//                onClick = {
+//                    onClick()
+//                }
+//            ),
+//
+//        ) {
+//        Row(verticalAlignment = Alignment.CenterVertically,
+//            horizontalArrangement = Arrangement.SpaceEvenly) {
+//            Text(
+//                text = "Lets Talk!",
+//                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold, color = Color.Black),
+//                textAlign = TextAlign.End
+//            )
+//        }
+//    }
+//}
 
-        ) {
-        Row(verticalAlignment = Alignment.CenterVertically,
-            horizontalArrangement = Arrangement.SpaceEvenly) {
-            Text(
-                text = "Lets Talk!",
-                style = TextStyle(fontSize = 14.sp, fontWeight = FontWeight.Bold),
-                textAlign = TextAlign.End
-            )
-        }
+@Composable
+fun TextButton(onClick: () -> Unit, txt : String, txtColor: Color, bgColor: Color) {
+    Button(
+        onClick = onClick,
+        shape = RoundedCornerShape(8.dp),
+        colors = ButtonDefaults.buttonColors(containerColor = bgColor), // Sesuaikan warna latar belakang tombol
+        modifier = Modifier
+            .size(width = 130.dp, height = 40.dp) // Ukuran tombol
+    ) {
+        Text(
+            text = txt,
+            style = TextStyle(
+                fontSize = 14.sp,
+                fontWeight = FontWeight.Bold,
+                color = txtColor
+            ),
+            textAlign = TextAlign.Center // Ubah alignment teks menjadi Center
+        )
     }
 }
 

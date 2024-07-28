@@ -4,6 +4,8 @@ import android.content.Context
 import android.content.Intent
 import android.widget.Toast
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
+import androidx.compose.animation.AnimatedVisibility
+import androidx.compose.foundation.ExperimentalFoundationApi
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
@@ -28,6 +30,7 @@ import androidx.navigation.NavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.RoundedIconWrapperMini
 import com.example.chatterboticaapp.ui.theme.Black01
+import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.Grey02
 import com.example.chatterboticaapp.ui.theme.Grey03
 import com.example.chatterboticaapp.ui.theme.Grey04
@@ -91,8 +94,13 @@ fun DocsScreen(navController: NavController) {
 
         if(isLoadingState){
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                Text("Loading ... ")
-                CircularProgressIndicator()
+                Column(horizontalAlignment = Alignment.CenterHorizontally) {
+                    CircularProgressIndicator(
+                        color = Grey01
+                    )
+                    Spacer(modifier = Modifier.height(10.dp))
+                    Text(text="Loading", color = Grey01)
+                }
             }
         }
 
@@ -102,9 +110,14 @@ fun DocsScreen(navController: NavController) {
                 verticalArrangement = Arrangement.spacedBy(8.dp)
             ) {
                 items(pdfFiles.reversed()) { file ->
-                    PdfFileItem(file = file, onClickItem = {docsViewModel.openPdfFile(context, file)}, onDeleteClick = {docsViewModel.deletePdfFile(context, file)})
+                    AnimatedVisibility(visible = true) {
+                        PdfFileItem(file = file, onClickItem = {docsViewModel.openPdfFile(context, file)}, onDeleteClick = {docsViewModel.deletePdfFile(context, file)})
+
+                    }
                 }
+
             }
+
         } else if(pdfFiles.isEmpty() && !isLoadingState){
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
                 Text(
