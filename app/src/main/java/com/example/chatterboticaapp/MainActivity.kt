@@ -73,8 +73,8 @@ class MainActivity : ComponentActivity() {
 
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute = navBackStackEntry?.destination?.route
-                    val isBottomNavVisible = currentRoute !in listOf(Routes.SPEECH_LISTENING_SCREEN, Routes.CHAT_SCREEN+"/{sessionChatId}")
 
+                    val isBottomNavVisible = currentRoute !in listOf(Routes.CHAT_SCREEN+"/{sessionChatId}", Routes.CAMERA_SCREEN, Routes.TEXT_EXTRACTION_SCREEN)
                     LaunchedEffect(currentRoute) {
                         selectedItem = when (currentRoute) {
                             Routes.HOMES_SCREEN -> 0

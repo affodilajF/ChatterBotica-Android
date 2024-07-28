@@ -51,7 +51,7 @@ class VoiceToTextParser @Inject constructor(private val app:Application) : Recog
         
         _state.update { currentState ->
             currentState.copy(
-                isSpeaking = true,
+
                 spokenText = currentState.spokenText + existedText
             )
         }
@@ -71,6 +71,7 @@ class VoiceToTextParser @Inject constructor(private val app:Application) : Recog
     override fun onReadyForSpeech(params: Bundle?) {
         _state.update {
             it.copy(
+                isSpeaking = true,
                 error = null
             )
         }
@@ -98,7 +99,8 @@ class VoiceToTextParser @Inject constructor(private val app:Application) : Recog
 
         _state.update {
             it.copy(
-                error = "Error : $error"
+                error = "Error : $error",
+                isSpeaking = false,
             )
         }
     }
