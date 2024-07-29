@@ -34,16 +34,14 @@ import androidx.navigation.compose.currentBackStackEntryAsState
 import androidx.navigation.compose.rememberNavController
 import com.example.chatterboticaapp.ui.navigation.AppNavigationGraph
 import com.example.chatterboticaapp.ui.navigation.Routes
-import com.example.chatterboticaapp.ui.screen.HomeScreen
-import com.example.chatterboticaapp.ui.screen.MainScreen
-import com.example.chatterboticaapp.utils.VoiceToTextParser
-import com.example.chatterboticaapp.ui.screen.SpeechListeningScreen
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Black01
-import com.example.chatterboticaapp.ui.theme.ChatterBoticaAppTheme
+import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey02
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.utils.MicrophoneUtils
 import dagger.hilt.android.AndroidEntryPoint
+
 
 
 @AndroidEntryPoint
@@ -57,7 +55,7 @@ class MainActivity : ComponentActivity() {
 
         setContent {
 
-            ChatterBoticaAppTheme {
+            AppTheme {
                 Surface(modifier = Modifier
                     .safeDrawingPadding()
                     .fillMaxSize()
@@ -74,7 +72,7 @@ class MainActivity : ComponentActivity() {
                     val navBackStackEntry by navController.currentBackStackEntryAsState()
                     val currentRoute = navBackStackEntry?.destination?.route
 
-                    val isBottomNavVisible = currentRoute !in listOf(Routes.CHAT_SCREEN+"/{sessionChatId}", Routes.CAMERA_SCREEN, Routes.TEXT_EXTRACTION_SCREEN)
+                    val isBottomNavVisible = currentRoute !in listOf(Routes.CHAT_SCREEN+"/{sessionChatId}", Routes.CAMERA_SCREEN, Routes.TEXT_EXTRACTION_SCREEN, Routes.SPEECH_LISTENING_SCREEN)
                     LaunchedEffect(currentRoute) {
                         selectedItem = when (currentRoute) {
                             Routes.HOMES_SCREEN -> 0
@@ -91,13 +89,13 @@ class MainActivity : ComponentActivity() {
                                 BottomAppBar(containerColor = Color.Transparent){
                                     Surface(
                                         shape = RoundedCornerShape(25.dp),
-                                        color = GreyPurple01,
+                                        color = AppTheme.colors.Secondary8,
                                         modifier = Modifier.padding(horizontal = 10.dp)
                                     ) {
                                         NavigationBar(containerColor = Color.Transparent) {
                                             items.forEachIndexed { index, item ->
                                                 NavigationBarItem(
-                                                    icon = { Icon( painter = painterResource(icons[index]),  tint = if (selectedItem == index)  Color.White else  Grey02, contentDescription = item, modifier = Modifier.size(36.dp)) },
+                                                    icon = { Icon( painter = painterResource(icons[index]),  tint = if (selectedItem == index)  Color.White else  AppTheme.colors.Secondary9, contentDescription = item, modifier = Modifier.size(36.dp)) },
                                                     selected = selectedItem == index,
                                                     onClick = { selectedItem = index
 //                                                        navController.navigate(item) {
@@ -144,7 +142,7 @@ class MainActivity : ComponentActivity() {
                                                     },
                                                     colors = NavigationBarItemDefaults
                                                         .colors(
-                                                            indicatorColor = GreyPurple01
+                                                            indicatorColor = AppTheme.colors.Secondary8
                                                         )
                                                 )
                                             }
@@ -165,6 +163,9 @@ class MainActivity : ComponentActivity() {
 
 
 }
+
+
+
 
 
 
