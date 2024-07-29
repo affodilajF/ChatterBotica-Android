@@ -12,6 +12,7 @@ import androidx.compose.foundation.layout.height
 import androidx.compose.foundation.layout.padding
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.CircularProgressIndicator
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
 import androidx.compose.runtime.LaunchedEffect
@@ -27,8 +28,11 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.tooling.preview.Preview
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
+import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.chatterboticaapp.ui.component.TextButton
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Green02
@@ -48,14 +52,14 @@ fun TextExtractionScreen(navController : NavController, textExtractViewModel : T
     }
 
     Column(modifier = Modifier
-        .background(color = Black01)
+        .background(color = MaterialTheme.colorScheme.background)
         .fillMaxSize()
         .padding(horizontal = 18.dp, vertical = 22.dp)) {
 
         Text(
             text = "Image Text Extraction Result",
             style = TextStyle(
-                color = Color.White,
+                color = AppTheme.colors.Neutral1,
                 fontSize = 20.sp,
                 fontWeight = FontWeight.Bold
             ),
@@ -68,7 +72,7 @@ fun TextExtractionScreen(navController : NavController, textExtractViewModel : T
             modifier = Modifier
                 .clip(shape = RoundedCornerShape(8.dp))
                 .weight(1f)
-                .background(Color.White)
+                .background(AppTheme.colors.Secondary2)
                 .fillMaxSize(),
 
         ) {
@@ -83,7 +87,7 @@ fun TextExtractionScreen(navController : NavController, textExtractViewModel : T
                 Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
                     Column(horizontalAlignment = Alignment.CenterHorizontally) {
                         CircularProgressIndicator(
-                            color = Green02
+                            color = AppTheme.colors.Primary2
                         )
                         Spacer(modifier = Modifier.height(10.dp))
                         Text(text="Loading", color = Color.Black)
@@ -97,8 +101,8 @@ fun TextExtractionScreen(navController : NavController, textExtractViewModel : T
             .padding(top = 30.dp),
             horizontalArrangement = Arrangement.SpaceBetween) {
 
-            TextButton(onClick = { navController.popBackStack(navController.graph.startDestinationId, false) }, txt = "Back" , txtColor = Color.White, bgColor = GreyPurple01 )
-            TextButton(onClick = { textExtractViewModel.copyToClipboard(context) }, txt = "Copy" , txtColor = Color.Black, bgColor = Green01 )
+            TextButton(onClick = { navController.popBackStack(navController.graph.startDestinationId, false) }, txt = "Back" , txtColor = AppTheme.colors.Neutral2, bgColor = AppTheme.colors.Secondary1)
+            TextButton(onClick = { textExtractViewModel.copyToClipboard(context) }, txt = "Copy" , txtColor = AppTheme.colors.Neutral2, bgColor = AppTheme.colors.Primary1 )
         }
     }
 
@@ -108,6 +112,10 @@ fun TextExtractionScreen(navController : NavController, textExtractViewModel : T
 @Preview
 @Composable
 fun TextExtractionScreenPreview(){
-//    val navController = rememberNavController()
-//    TextExtractionScreen(navController)
+    val navController = rememberNavController()
+    val a : TextExtractionViewModel = hiltViewModel()
+
+    AppTheme {
+        TextExtractionScreen(navController,a)
+    }
 }

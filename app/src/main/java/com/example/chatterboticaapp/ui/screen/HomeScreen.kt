@@ -72,10 +72,12 @@ import androidx.compose.animation.core.animateFloat
 import androidx.compose.material3.Button
 import androidx.compose.material3.ButtonDefaults
 import androidx.compose.material3.ExperimentalMaterial3Api
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.SwipeToDismiss
 import androidx.compose.material3.rememberDismissState
 import androidx.compose.ui.input.pointer.motionEventSpy
 import androidx.compose.ui.layout.onGloballyPositioned
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Grey04
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple03
@@ -120,7 +122,7 @@ fun HomeScreen(navController: NavController){
     }
     Column(modifier = Modifier
         .fillMaxSize()
-        .background(color = Black01)
+        .background(color = AppTheme.colors.Background1)
         .padding(horizontal = 18.dp, vertical = 22.dp)
             ,
         ) {
@@ -146,7 +148,7 @@ fun HomeScreen(navController: NavController){
                     horizontalArrangement = Arrangement.SpaceBetween) {
                     Text(
                         text = "Recent Searchers",
-                        color = Grey01,
+                        color = AppTheme.colors.Tertiary1,
                         style = TextStyle(fontSize = 15.sp))
 
                     Button(
@@ -157,35 +159,42 @@ fun HomeScreen(navController: NavController){
                     ) {
                         Text(
                             text = "Clear all",
-                            color = Grey02,
+                            color = AppTheme.colors.Tertiary2,
                             style = TextStyle(fontSize = 12.sp)
                         )
                     }
                 }
             }
 
-                Box(modifier = Modifier.weight(2f)){
+                Box(modifier = Modifier
+                    .weight(2f)
+                    .padding()){
                     if(isLoadingState){
                         Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
                             Column(horizontalAlignment = Alignment.CenterHorizontally, modifier = Modifier.padding(bottom = 100.dp)) {
                                 CircularProgressIndicator(
-                                    color = Grey01
+                                    color = AppTheme.colors.Tertiary1
                                 )
                                 Spacer(modifier = Modifier.height(10.dp))
-                                Text(text="Loading", color = Grey01)
+                                Text(text="Loading", color = AppTheme.colors.Tertiary1)
                             }
                         }
                     }
                     else if (!isHistoryEmptyState){
                         LazyColumn(
                             modifier = Modifier.fillMaxSize(),
-                            state = lazyListState
+                            state = lazyListState,
+                            verticalArrangement = Arrangement.spacedBy(8.dp)
                         ) {
                             items(itemChatsHistoryState, key = { history -> history.id }) { history ->
                                 HistoryBox(history){
                                     val id: Long = history.id
                                     navController.navigate(route = Routes.CHAT_SCREEN + "/$id")
                                 }
+                            }
+
+                            item {
+                                Spacer(modifier = Modifier.height(60.dp)) // Menambahkan ruang kosong di bawah item terakhir
                             }
 
                         }
@@ -197,7 +206,7 @@ fun HomeScreen(navController: NavController){
                             Text(
                                 text = "No history found",
                                 style = TextStyle(
-                                    color = Grey03,
+                                    color = AppTheme.colors.Tertiary3,
                                     fontSize = 24.sp,
                                 ),
                                 modifier = Modifier
@@ -205,7 +214,9 @@ fun HomeScreen(navController: NavController){
                             )
                         }
                     }
+
             }
+//        Box(modifier = Modifier.weight(0.35f))
         }
     }
 

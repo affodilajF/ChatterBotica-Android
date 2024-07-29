@@ -20,8 +20,10 @@ import androidx.compose.ui.Modifier
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.unit.dp
 import com.example.chatterboticaapp.R
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
+import com.example.chatterboticaapp.ui.theme.Green02
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 
 
@@ -29,7 +31,7 @@ import com.example.chatterboticaapp.ui.theme.GreyPurple01
 fun ChatMenuUtility(micIcon: Int, isFetchingParam : Boolean, text: String, onTextChange: (String) -> Unit, onClickSend: () -> Unit, onClickMic: ()->Unit, onClickPdf: ()-> Unit){
 
     val isFetching by rememberUpdatedState(isFetchingParam)
-    val color = if (isFetching) Color.Gray else Green01
+    val color = if (isFetching) Color.Gray else AppTheme.colors.Primary1
     val iconResId = if (isFetching) R.drawable.baseline_rectangle_24 else R.drawable.send
 
     Surface(modifier = Modifier
@@ -38,13 +40,13 @@ fun ChatMenuUtility(micIcon: Int, isFetchingParam : Boolean, text: String, onTex
         Row(
             verticalAlignment = Alignment.Bottom,
             modifier = Modifier
-                .background(color = Black01)
+                .background(color = AppTheme.colors.Secondary4)
                 .padding(horizontal = 16.dp, vertical = 12.dp)
         )
         {
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterStart){
-                RoundedIconWrapperMedium(drawableIcon = R.drawable.pdf, GreyPurple01, Color.White){
+                RoundedIconWrapperMedium(drawableIcon = R.drawable.pdf, AppTheme.colors.Secondary8, Color.White){
                     onClickPdf()
                 }
             }
@@ -53,14 +55,14 @@ fun ChatMenuUtility(micIcon: Int, isFetchingParam : Boolean, text: String, onTex
                 TextInputField(
                     txtHint = "",
                     txtColor = Color.White,
-                    bgColor = GreyPurple01,
+                    bgColor = AppTheme.colors.Secondary8,
                     text = text,
                     onTextChange = onTextChange
                 )
             }
             Box(modifier = Modifier.weight(0.5f),
                 contentAlignment = Alignment.CenterEnd){
-                RoundedIconWrapperMedium(drawableIcon = micIcon, GreyPurple01, Color.White){
+                RoundedIconWrapperMedium(drawableIcon = micIcon, AppTheme.colors.Secondary8, Color.White){
                     onClickMic()
                 }
 

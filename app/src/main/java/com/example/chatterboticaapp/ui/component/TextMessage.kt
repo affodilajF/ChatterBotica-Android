@@ -23,6 +23,7 @@ import androidx.compose.ui.text.font.FontWeight
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
+import com.example.chatterboticaapp.ui.theme.AppTheme
 
 
 @Composable
@@ -31,10 +32,10 @@ fun TextMessageRequest(username: String, text: String){
         MiniProfile(R.drawable.temprofilepic)
         Spacer(modifier = Modifier.width(7.dp))
         Column{
-            Text(text = username, style = TextStyle(color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp))
+            Text(text = username, style = TextStyle(color = AppTheme.colors.Neutral1, fontWeight = FontWeight.Bold, fontSize = 14.sp))
             Spacer(modifier = Modifier.height(10.dp))
             Text(text = text,
-                style = TextStyle(color = Color.White, fontSize = 14.sp)
+                style = TextStyle(color = AppTheme.colors.Neutral1, fontSize = 14.sp)
             )
         }
     }
@@ -67,10 +68,10 @@ fun TextMessageResponse(username: String, text: String){
         MiniProfile(R.drawable.robot)
         Spacer(modifier = Modifier.width(7.dp))
         Column{
-            Text(text = username, style = TextStyle(color = Color.White, fontWeight = FontWeight.Bold, fontSize = 14.sp))
+            Text(text = username, style = TextStyle(color = AppTheme.colors.Neutral1, fontWeight = FontWeight.Bold, fontSize = 14.sp))
             Spacer(modifier = Modifier.height(10.dp))
             Text(text=textResponse,
-                style = TextStyle(color = Color.White, fontSize = 14.sp)
+                style = TextStyle(color = AppTheme.colors.Neutral1, fontSize = 14.sp)
             )
         }
     }

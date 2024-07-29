@@ -15,12 +15,13 @@ import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.res.painterResource
 import androidx.compose.ui.unit.dp
 import com.example.chatterboticaapp.R
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import kotlinx.coroutines.launch
 
 @Composable
-fun RoundedIconWrapperMini(drawableIcon: Int, colorWrapper: Color){
+fun RoundedIconWrapperMini(drawableIcon: Int, colorWrapper: Color, colorIconTint : Color){
     Box(
         modifier = Modifier
             .size(40.dp)
@@ -30,7 +31,7 @@ fun RoundedIconWrapperMini(drawableIcon: Int, colorWrapper: Color){
         Icon(
             painter = painterResource(drawableIcon),
             contentDescription = "Icon",
-            tint = Grey01,
+            tint = colorIconTint ,
             modifier = Modifier.size(24.dp)
         )
     }

@@ -29,6 +29,7 @@ import androidx.compose.ui.text.style.TextAlign
 import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Green02
 import com.example.chatterboticaapp.ui.theme.GreyPurple01
 import com.example.chatterboticaapp.ui.theme.GreyPurple02
@@ -40,7 +41,7 @@ fun SpeechTextDialog() {
         modifier = Modifier
             .fillMaxWidth(0.9f)
             .fillMaxHeight(0.4f),
-        containerColor = Green02,
+        containerColor = AppTheme.colors.Primary2,
         icon = {
             Image(
                 painter = painterResource(id = R.drawable.robot),
@@ -73,7 +74,7 @@ fun GeneratePdfDialog(onDismiss: () -> Unit, onGeneratePdf: (String) -> Unit, on
     var textValue by remember { mutableStateOf("") }
 
     AlertDialog(
-        containerColor = Green02,
+        containerColor = AppTheme.colors.Primary2,
         onDismissRequest = { onDismiss() },
         title = {
             Text(text = "PDF File Name", style = TextStyle(color = Color.White, fontWeight = FontWeight.Bold, fontSize = 16.sp))

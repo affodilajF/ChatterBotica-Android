@@ -26,6 +26,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.data.model.local.VoiceToTextParserState
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Grey01
 
 @Composable
@@ -34,17 +35,17 @@ fun ChatStringText(){
         horizontalArrangement = Arrangement.SpaceBetween){
         Text(
             buildAnnotatedString {
-                withStyle(style = SpanStyle(fontSize = 11.sp, color = Color.White)){
+                withStyle(style = SpanStyle(fontSize = 11.sp, color = AppTheme.colors.Neutral1)){
                     append("Start new ")
                 }
-                withStyle(style = SpanStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)){
+                withStyle(style = SpanStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppTheme.colors.Neutral1)){
                     append("Chat")
                 }
             })
         Icon(
             painter = painterResource(R.drawable.baseline_arrow_forward_24 ),
             contentDescription = "Row Icon",
-            tint = Grey01,
+            tint = AppTheme.colors.Neutral1,
             modifier = Modifier.size(14.dp)
         )
     }
@@ -58,20 +59,20 @@ fun ExtractionStringText(){
         Column {
             Text(
                 buildAnnotatedString {
-                    withStyle(style = SpanStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)){
+                    withStyle(style = SpanStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppTheme.colors.Neutral1)){
                         append("Photo ")
                     }
-                    withStyle(style = SpanStyle(fontSize = 11.sp, color = Color.White)){
+                    withStyle(style = SpanStyle(fontSize = 11.sp, color = AppTheme.colors.Neutral1)){
                         append("to ")
                     }
-                    withStyle(style = SpanStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = Color.White)){
+                    withStyle(style = SpanStyle(fontSize = 11.sp, fontWeight = FontWeight.Bold, color = AppTheme.colors.Neutral1)){
                         append("text")
                     }
                 }
             )
             Text(
                 buildAnnotatedString {
-                withStyle(style = SpanStyle(fontSize = 11.sp, color = Color.White)){
+                withStyle(style = SpanStyle(fontSize = 11.sp, color =  AppTheme.colors.Neutral1)){
                     append("extraction")
                 }
             })
@@ -80,7 +81,7 @@ fun ExtractionStringText(){
         Icon(
             painter = painterResource(R.drawable.baseline_arrow_forward_24 ),
             contentDescription = "Row Icon",
-            tint = Color.White,
+            tint = AppTheme.colors.Neutral1,
             modifier = Modifier.size(14.dp)
         )
     }
@@ -101,13 +102,13 @@ fun TextResultOfSpeech(state: VoiceToTextParserState) {
             if (speaking) {
                 Text(
                     text = state.spokenText,
-                    style = TextStyle(fontSize = 16.sp, color = Color.White),
+                    style = TextStyle(fontSize = 16.sp, color = AppTheme.colors.Neutral1),
                     textAlign = TextAlign.Center,
                 )
             } else {
                 Text(
                     text = state.spokenText,
-                    style = TextStyle(fontSize = 16.sp, color = Color.White),
+                    style = TextStyle(fontSize = 16.sp, color = AppTheme.colors.Neutral1),
                     textAlign = TextAlign.Center,
                 )
             }
@@ -123,12 +124,12 @@ fun TitleBar(){
         Column {
             Text(
                 text = "Hello, Affodilaj!",
-                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = Color.White),
+                style = TextStyle(fontSize = 24.sp, fontWeight = FontWeight.Bold, color = AppTheme.colors.Neutral1),
             )
             Spacer(modifier = Modifier.height(5.dp))
             Text(
                 text = "What you want ChatterBotica do for you?",
-                style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, color = Grey01),
+                style = TextStyle(fontSize = 12.sp, fontWeight = FontWeight.Normal, color = AppTheme.colors.Neutral1),
             )
         }
         MediumProfile()

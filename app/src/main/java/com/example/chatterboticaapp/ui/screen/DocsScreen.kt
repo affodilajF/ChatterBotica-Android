@@ -6,17 +6,20 @@ import android.widget.Toast
 import androidx.activity.compose.LocalOnBackPressedDispatcherOwner
 import androidx.compose.animation.AnimatedVisibility
 import androidx.compose.foundation.ExperimentalFoundationApi
+import androidx.compose.foundation.Image
 import androidx.compose.foundation.background
 import androidx.compose.foundation.clickable
 import androidx.compose.foundation.layout.*
 import androidx.compose.foundation.lazy.LazyColumn
 import androidx.compose.foundation.lazy.items
+import androidx.compose.foundation.shape.CircleShape
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.*
 import androidx.compose.runtime.*
 import androidx.compose.runtime.livedata.observeAsState
 import androidx.compose.ui.Alignment
 import androidx.compose.ui.Modifier
+import androidx.compose.ui.draw.clip
 import androidx.compose.ui.graphics.Color
 import androidx.compose.ui.platform.LocalContext
 import androidx.compose.ui.res.painterResource
@@ -29,7 +32,9 @@ import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.ui.component.RoundedIconWrapperMini
-import com.example.chatterboticaapp.ui.theme.Black01
+import com.example.chatterboticaapp.ui.theme.AppTheme
+import com.example.chatterboticaapp.ui.theme.Blue01
+import com.example.chatterboticaapp.ui.theme.Blue03
 import com.example.chatterboticaapp.ui.theme.Grey01
 import com.example.chatterboticaapp.ui.theme.Grey02
 import com.example.chatterboticaapp.ui.theme.Grey03
@@ -75,7 +80,7 @@ fun DocsScreen(navController: NavController) {
     Column(
         modifier = Modifier
             .fillMaxSize()
-            .background(color = Black01)
+            .background(color = AppTheme.colors.Background1)
             .padding(horizontal = 18.dp, vertical = 22.dp)
         ,
 
@@ -83,13 +88,13 @@ fun DocsScreen(navController: NavController) {
         Text(
             text = "Your PDF Files",
             style = TextStyle(
-                color = Color.White,
+                color = AppTheme.colors.Neutral1,
                 fontSize = 24.sp,
                 fontWeight = FontWeight.Bold
             ),
             modifier = Modifier
                 .fillMaxWidth()
-                .padding(vertical = 20.dp) // Optional: Makes the Text fill the width of the parent
+                .padding(bottom = 20.dp) // Optional: Makes the Text fill the width of the parent
         )
 
         if(isLoadingState){
@@ -120,15 +125,28 @@ fun DocsScreen(navController: NavController) {
 
         } else if(pdfFiles.isEmpty() && !isLoadingState){
             Box(modifier = Modifier.fillMaxSize(), contentAlignment = Alignment.Center){
-                Text(
-                    text = "No data found",
-                    style = TextStyle(
-                        color = Grey03,
-                        fontSize = 24.sp,
-                    ),
-                    modifier = Modifier
-                        .padding(vertical = 20.dp) // Optional: Makes the Text fill the width of the parent
-                )
+                Column(modifier = Modifier.fillMaxSize(), verticalArrangement = Arrangement.Center, horizontalAlignment = Alignment.CenterHorizontally) {
+                    Image(
+                        painter = painterResource(id = R.drawable.nodata),
+                        contentDescription = "profile pic",
+                        modifier = Modifier
+                            .size(210.dp)
+                            .padding(4.dp)
+                            .clip(CircleShape)
+                    )
+
+                    Text(
+                        text = "No data found",
+                        style = TextStyle(
+                            color = AppTheme.colors.Tertiary3,
+                            fontSize = 24.sp,
+                        ),
+                        modifier = Modifier
+                            .padding(vertical = 20.dp) // Optional: Makes the Text fill the width of the parent
+                    )
+                }
+
+
             }
         }
     }
@@ -143,9 +161,8 @@ fun PdfFileItem(file: File, onDeleteClick: (File) -> Unit, onClickItem: ()->Unit
             .clickable {
                 onClickItem()
             },
-        color = Grey04,
+        color = AppTheme.colors.Secondary3,
         shape = RoundedCornerShape(8.dp), // Rounded corners
-        shadowElevation = 4.dp // Shadow for elevation effect
     ) {
         Row(
             modifier = Modifier
@@ -161,13 +178,13 @@ fun PdfFileItem(file: File, onDeleteClick: (File) -> Unit, onClickItem: ()->Unit
                     .size(24.dp)
                     .weight(0.15f)
                 ,
-                tint = Color.White
+                tint = AppTheme.colors.Neutral1
             )
 
             Text(
                 text = file.name,
                 style = TextStyle(
-                    color = Color.White,
+                    color = AppTheme.colors.Neutral1,
                     fontSize = 14.sp,
                 ),
                 modifier = Modifier
@@ -181,7 +198,7 @@ fun PdfFileItem(file: File, onDeleteClick: (File) -> Unit, onClickItem: ()->Unit
                         onDeleteClick(file)
                     }
             ) {
-                RoundedIconWrapperMini(drawableIcon = R.drawable.baseline_delete_24, colorWrapper = Grey03)
+                RoundedIconWrapperMini(drawableIcon = R.drawable.baseline_delete_24, colorWrapper = AppTheme.colors.Secondary1, AppTheme.colors.Secondary6)
             }
         }
     }

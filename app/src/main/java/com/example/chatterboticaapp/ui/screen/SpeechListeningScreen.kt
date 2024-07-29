@@ -27,6 +27,7 @@ import androidx.compose.foundation.layout.size
 import androidx.compose.foundation.layout.width
 import androidx.compose.foundation.shape.RoundedCornerShape
 import androidx.compose.material3.Icon
+import androidx.compose.material3.MaterialTheme
 import androidx.compose.material3.Surface
 import androidx.compose.material3.Text
 import androidx.compose.runtime.Composable
@@ -50,10 +51,12 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import androidx.hilt.navigation.compose.hiltViewModel
 import androidx.navigation.NavController
+import androidx.navigation.compose.rememberNavController
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.data.model.local.VoiceToTextParserState
 import com.example.chatterboticaapp.ui.component.IconTextButton
 import com.example.chatterboticaapp.ui.component.TextResultOfSpeech
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Black01
 import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey01
@@ -64,6 +67,8 @@ import com.example.chatterboticaapp.ui.viewmodel.SpeechListeningViewModel
 @Preview
 @Composable
 fun SpeechListeningPreview(){
+//    val a = rememberNavController()
+//    SpeechListeningScreen(navController = a)
 }
 
 @Composable
@@ -98,7 +103,7 @@ fun SpeechListeningScreen(navController: NavController){
 
     Surface(modifier = Modifier
         .fillMaxSize(),
-        color = Black01,
+        color = AppTheme.colors.Background1,
     ) {
         Column(modifier = Modifier.fillMaxSize(),
         ) {
@@ -118,7 +123,6 @@ fun SpeechListeningScreen(navController: NavController){
 
             ) {
 //                RobotIconTalking()
-
                 if(!mediaPlayingState){
                     TextResultOfSpeech(voiceToTextState)
                 }
@@ -144,11 +148,11 @@ fun SpeechListeningScreen(navController: NavController){
                         .fillMaxWidth(),
                         horizontalArrangement = Arrangement.Center,
                     ){
-                        IconTextButton(icon = R.drawable.reset, iconColor = Grey01, txtColor = Grey01, btnColor = GreyPurple03, btnTxt = "Reset") {
+                        IconTextButton(icon = R.drawable.reset, iconColor = Color.White, txtColor = Color.White, btnColor = AppTheme.colors.Secondary1, btnTxt = "Reset") {
                             speechListeningViewModel.clearSpokenText()
                         }
                         Spacer(modifier = Modifier.width(24.dp))
-                        IconTextButton(icon = R.drawable.send, iconColor = Color.Black, txtColor = Color.Black, btnColor = Green01, btnTxt = "Send") {
+                        IconTextButton(icon = R.drawable.send, iconColor = AppTheme.colors.Neutral2, txtColor = AppTheme.colors.Neutral2, btnColor = AppTheme.colors.Primary1, btnTxt = "Send") {
 
                             speechListeningViewModel.fetchResponse(voiceToTextState.spokenText) { result ->
                                 Log.d("MyComposable", "Hasil dari generative model yeah: ${result.response}")
@@ -208,7 +212,7 @@ fun RobotIconTalking(){
             Icon(
                 painter = painterResource(id = R.drawable.robot),
                 contentDescription = "ya",
-                tint = Green01,
+                tint = AppTheme.colors.Primary1,
                 modifier = Modifier.size(220.dp)
             )
         }
@@ -218,7 +222,7 @@ fun RobotIconTalking(){
             Text(
                 text = buildAnnotatedString {
                     append("....".substring(0, animatedDots)) },
-                style = TextStyle(fontSize = 37.sp, color = Green01),
+                style = TextStyle(fontSize = 37.sp, color = AppTheme.colors.Primary1),
                 textAlign = TextAlign.Center,
                 modifier = Modifier
                     .fillMaxWidth()
@@ -233,7 +237,7 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListenin
 
     val iconResId = if (isSpeakingAllowed) R.drawable.baseline_mic_on_24 else R.drawable.baseline_mic_off_24
 
-    val boxColor = if (isSpeakingAllowed) GreyPurple03 else Black01
+    val boxColor = if (isSpeakingAllowed) AppTheme.colors.Secondary3 else AppTheme.colors.Secondary4
     val animatedAlpha by infiniteTransitionSpeech.animateFloat(
         initialValue = if (isSpeakingAllowed) 0.2f else 1f,
         targetValue = 1f,
@@ -268,7 +272,7 @@ fun SpeechListeningIcon(state: VoiceToTextParserState, viewModel: SpeechListenin
                         }
                     )
                     .size(110.dp)
-                    .background(color = GreyPurple01, shape = RoundedCornerShape(percent = 50)),
+                    .background(color = AppTheme.colors.Secondary8, shape = RoundedCornerShape(percent = 50)),
                 contentAlignment = Alignment.Center
             ) {
                 Icon(
@@ -301,7 +305,7 @@ fun Title(text: String, padding: Int) {
             .fillMaxWidth()
             .padding(horizontal = 35.dp)
             .height(50.dp)
-            .background(color = GreyPurple01, shape = RoundedCornerShape(25.dp)),
+            .background(color = AppTheme.colors.Secondary1, shape = RoundedCornerShape(25.dp)),
         contentAlignment = Alignment.Center
     ) {
         Text(
@@ -314,7 +318,7 @@ fun Title(text: String, padding: Int) {
                     append("....".substring(0, animatedDots))
                 })
             },
-            style = TextStyle(fontSize = 17.sp, color = Grey01),
+            style = TextStyle(fontSize = 17.sp, color = AppTheme.colors.Tertiary1),
             textAlign = TextAlign.Start,
             modifier = Modifier
                 .fillMaxWidth()

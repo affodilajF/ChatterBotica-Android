@@ -42,6 +42,7 @@ import androidx.compose.ui.unit.dp
 import androidx.compose.ui.unit.sp
 import com.example.chatterboticaapp.R
 import com.example.chatterboticaapp.data.model.local.SessionChats
+import com.example.chatterboticaapp.ui.theme.AppTheme
 import com.example.chatterboticaapp.ui.theme.Green01
 import com.example.chatterboticaapp.ui.theme.Grey00
 import com.example.chatterboticaapp.ui.theme.Grey04
@@ -54,7 +55,7 @@ fun MediumBox(text: String, onClick: () -> Unit){
     Surface(modifier = Modifier
         .height(105.dp)
         .width(170.dp),
-        color = Grey04,
+        color = AppTheme.colors.Secondary5,
         shape = RoundedCornerShape(10.dp)
     ) {
 
@@ -63,7 +64,7 @@ fun MediumBox(text: String, onClick: () -> Unit){
             .clickable(onClick = {
                 onClick()
             })
-            .background(color = GreyPurple03, shape = RoundedCornerShape(10.dp)))
+            .background(color = AppTheme.colors.Secondary3 , shape = RoundedCornerShape(10.dp)))
         {
             Column(modifier = Modifier
                 .fillMaxSize()
@@ -73,11 +74,11 @@ fun MediumBox(text: String, onClick: () -> Unit){
 
 
                if(text=="Chat"){
-                   RoundedIconWrapperMini(drawableIcon = R.drawable.chat, GreyPurple01)
+                   RoundedIconWrapperMini(drawableIcon = R.drawable.chat, AppTheme.colors.Secondary1, AppTheme.colors.Secondary6)
                    Spacer(modifier = Modifier.height(6.dp))
                    ChatStringText()
                } else if (text=="Extraction"){
-                   RoundedIconWrapperMini(drawableIcon = R.drawable.extraction, GreyPurple01)
+                   RoundedIconWrapperMini(drawableIcon = R.drawable.extraction, AppTheme.colors.Secondary1, AppTheme.colors.Secondary6)
                    Spacer(modifier = Modifier.height(6.dp))
                    ExtractionStringText()
                }
@@ -94,13 +95,13 @@ fun BigBox(onClick: () -> Unit){
         modifier = Modifier
             .height(222.dp)
             .width(170.dp),
-        color = Grey04,
+        color = AppTheme.colors.Secondary5,
         shape = RoundedCornerShape(10.dp)
     ){
         Box(
             modifier = Modifier
                 .padding(10.dp) // Adjust dimensions and padding as needed
-                .background(color = GreyPurple03, shape = RoundedCornerShape(percent = 5)),
+                .background(color = AppTheme.colors.Secondary3, shape = RoundedCornerShape(percent = 5)),
         ) {
             Column(modifier = Modifier
                 .fillMaxHeight()
@@ -108,17 +109,17 @@ fun BigBox(onClick: () -> Unit){
             ) {
                 Text(
                     buildAnnotatedString {
-                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = Color.White )) {
+                        withStyle(style = SpanStyle(fontWeight = FontWeight.Bold, fontSize = 14.sp, color = AppTheme.colors.Neutral1 )) {
                             append("Talking ")
                         }
-                        withStyle(style = SpanStyle(fontSize = 11.sp, color = Color.White )) {
+                        withStyle(style = SpanStyle(fontSize = 11.sp, color = AppTheme.colors.Neutral1 )) {
                             append("with\n")
                             append("ChatterBotica!")
                         }
                     },
                     Modifier.weight(1f)
                 )
-                TextButton(onClick, txt = "Let's Talk!", txtColor = GreyPurple01, bgColor = Green01)
+                TextButton(onClick, txt = "Let's Talk!", txtColor = AppTheme.colors.Neutral2, bgColor = AppTheme.colors.Primary1)
             }
         }
     }
@@ -152,8 +153,7 @@ fun HistoryBox(history : SessionChats, onClick: () -> Unit){
         .clickable {
             onClick()
         }
-        .padding(bottom = 16.dp)
-        .background(color = Grey04, shape = RoundedCornerShape(percent = 40)),
+        .background(color = AppTheme.colors.Secondary5, shape = RoundedCornerShape(percent = 40)),
     ) {
         Row(modifier = Modifier
             .fillMaxWidth()
@@ -163,16 +163,16 @@ fun HistoryBox(history : SessionChats, onClick: () -> Unit){
             Column {
                 Text(
                     text = history.title,
-                    style = TextStyle(fontSize = 14.sp, color = Color.White),
+                    style = TextStyle(fontSize = 14.sp, color = AppTheme.colors.Neutral1),
                 )
                 Spacer(modifier = Modifier.height(6.dp))
                 Text(
                     text = TimestampUtils.getDuration(history.timestamp),
-                    style = TextStyle(fontSize = 8.sp, color = Color.White),
+                    style = TextStyle(fontSize = 8.sp, color = AppTheme.colors.Neutral1),
                 )
 
             }
-            RoundedIconWrapperMini(drawableIcon = R.drawable.baseline_arrow_forward_24, colorWrapper = Grey00)
+            RoundedIconWrapperMini(drawableIcon = R.drawable.baseline_arrow_forward_24, colorWrapper = AppTheme.colors.Secondary7, AppTheme.colors.Secondary6)
         }
     }
     }
